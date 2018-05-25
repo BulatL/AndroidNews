@@ -31,26 +31,24 @@ public class PostsAdapter extends ArrayAdapter<Post> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        final Post post = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.post_item, parent, false);
         }
 
-        final Post post = posts.get(position);
-
-        ImageView image = convertView.findViewById(R.id.post_image);
-        TextView title = convertView.findViewById(R.id.post_title);
-        TextView desc = convertView.findViewById(R.id.post_description);
-        TextView author = convertView.findViewById(R.id.post_author);
-        TextView likes = convertView.findViewById(R.id.post_likes);
-        TextView dislikes = convertView.findViewById(R.id.post_dislikes);
+        final ImageView image = convertView.findViewById(R.id.post_image);
+        final TextView title = convertView.findViewById(R.id.post_title);
+        final TextView desc = convertView.findViewById(R.id.post_description);
+        final TextView author = convertView.findViewById(R.id.post_author);
+        final TextView likes = convertView.findViewById(R.id.post_likes);
+        final TextView dislikes = convertView.findViewById(R.id.post_dislikes);
 
         if (post.getPhoto() != null) {
             image.setImageBitmap(post.getPhoto().getBitmap());
         }
         title.setText(post.getTitle());
         desc.setText(post.getDescription());
-        author.append("by ");
-        author.append(post.getAuthor().getUsername());
+        author.setText("by " +post.getAuthor().getUsername());
         likes.setText(String.valueOf(post.getLikes()));
         dislikes.setText(String.valueOf(post.getDislikes()));
 
@@ -66,6 +64,7 @@ public class PostsAdapter extends ArrayAdapter<Post> {
 
     private void openReadPostActivity(Post post) {
         Intent intent = new Intent(context, ReadPostActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("post", post);
         post.setPhoto(null);
         context.startActivity(intent);

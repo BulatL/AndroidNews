@@ -21,12 +21,12 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    public static final String MyPreferances = "MyPrefs";
+    public static final String MyPreferences = "MyPrefs";
     public static final String Username = "usernameKey";
     public static final String Name = "nameKey";
     private UserService userService;
-    private EditText editUsername;
-    private EditText editPassword;
+    private EditText editTextUsername;
+    private EditText editTextPassword;
     private Button btnLogin;
     private SharedPreferences sharedPreferences;
 
@@ -36,18 +36,18 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         userService = ServiceUtils.userService;
-        editUsername = findViewById(R.id.username);
-        editPassword = findViewById(R.id.password);
+        editTextUsername = findViewById(R.id.username);
+        editTextPassword = findViewById(R.id.password);
         btnLogin = findViewById(R.id.loginBtn);
 
-        sharedPreferences = getSharedPreferences(MyPreferances, Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(MyPreferences, Context.MODE_PRIVATE);
 
-        String userNamePref = sharedPreferences.getString(Username,"");
+        String userNamePref = sharedPreferences.getString(Username, "");
 
         System.out.println(userNamePref);
 
 
-        if(userNamePref.equals("")){
+        /*if (userNamePref.equals("")) {
             btnLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -56,20 +56,29 @@ public class LoginActivity extends AppCompatActivity {
 
                     SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                    if(validateLogin(username,password)){
-                        editor.putString(Username,username);
+                    if (validateLogin(username, password)) {
+                        editor.putString(Username, username);
                         editor.commit();
-                        doLogin(username,password);
+                        doLogin(username, password);
                     }
                 }
             });
-        }else{
-            Intent intent = new Intent(this,PostActivity.class);
+        } else {
+            Intent intent = new Intent(this, PostActivity.class);
             startActivity(intent);
-        }
+        }*/
 
     }
+    public void btnLogin (View view){
+        editTextUsername = findViewById(R.id.username);
+        editTextPassword = findViewById(R.id.password);
 
+        String username = editTextUsername.getText().toString();
+        String password = editTextPassword.getText().toString();
+        if(validateLogin(username, password)){
+            doLogin(username, password);
+        }
+    }
 
     private boolean validateLogin(String username,String password){
         if(username == null || username.trim().length() == 0){
@@ -90,9 +99,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 User user = response.body();
 
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(Name,user.getName());
-                editor.commit();
+                //SharedPreferences.Editor editor = sharedPreferences.edit();
+                //editor.putString(Name,user.getName());
+                //editor.commit();
 
                 if(username.equals(user.getUsername()) && password.equals(user.getPassword())){
 

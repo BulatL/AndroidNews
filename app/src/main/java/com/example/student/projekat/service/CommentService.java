@@ -27,5 +27,5 @@ public interface CommentService {
     Call<ResponseBody> addComment(@Body Comment comment);
 
     @DELETE("comments/{id}")
-    Call<Comment> deleteComment(@Path("id") int id);
+    Call<Void> deleteComment(@Path("id") int id);
 }

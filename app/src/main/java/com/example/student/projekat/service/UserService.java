@@ -14,7 +14,7 @@ public interface UserService {
             "Content-Type:application/json"
     })
 
-    @GET("users/{username}/{passwor}")
+    @GET("users/{username}/{password}")
     Call<User> login(@Path("username") String username, @Path("password") String password);
 
     @GET("users/user/{username}")

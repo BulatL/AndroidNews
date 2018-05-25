@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,6 +28,9 @@ import com.example.student.projekat.model.Comment;
 import com.example.student.projekat.model.Post;
 import com.example.student.projekat.model.Tag;
 import com.example.student.projekat.model.User;
+import com.example.student.projekat.service.CommentService;
+import com.example.student.projekat.service.PostService;
+import com.example.student.projekat.service.ServiceUtils;
 import com.example.student.projekat.util.CommentsDateComparator;
 import com.example.student.projekat.util.CommentsPopularityComparator;
 import com.example.student.projekat.util.PostsDateComparator;
@@ -38,6 +42,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ReadPostActivity extends AppCompatActivity {
     TextView title;
     TextView author;
@@ -48,9 +56,11 @@ public class ReadPostActivity extends AppCompatActivity {
     TextView disLikes;
     Bitmap myBitmap;
     private DrawerLayout mDrawerLayout;
-    private final List<Comment> comments = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
     private CommentsAdapter commentsAdapter;
     private SharedPreferences sharedPreferences;
+    private ListView commentsListView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,10 +132,9 @@ public class ReadPostActivity extends AppCompatActivity {
         imageView.setImageBitmap(myBitmap);
 
         commentsAdapter = new CommentsAdapter(this, comments);
-        ListView postsListView = findViewById(R.id.listOfComments);
-        postsListView.setAdapter(commentsAdapter);
+        commentsListView = findViewById(R.id.listOfComments);
 
-        User author = new User(1, "A", null, "admin", "admin", Collections.<Post>emptyList(), Collections.<Comment>emptyList());
+        /*User author = new User(1, "A", null, "admin", "admin", Collections.<Post>emptyList(), Collections.<Comment>emptyList());
         Bitmap postImage = BitmapFactory.decodeResource(getResources(), R.drawable.keyboard);
 
         comments.addAll(Arrays.asList(
@@ -135,7 +144,30 @@ public class ReadPostActivity extends AppCompatActivity {
                         1),
                 new Comment(3, "vrh komentar3", "jako mi se svidja ovaj post", author, new Date(1525199174000L), post, 15,
                         1)
-        ));
+        ));*/
+
+        CommentService commentService = ServiceUtils.commentService;
+
+        Call call = commentService.getCommentsByPost(post.getId());
+
+        call.enqueue(new Callback<List<Comment>>() {
+            @Override
+            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+                comments = response.body();
+                commentsAdapter = new CommentsAdapter(getApplicationContext(), comments);
+                for (Comment c: comments) {
+                    System.out.println(c.getDescription());
+                    System.out.println("-------------------------------------------");
+                }
+                commentsListView.setAdapter(commentsAdapter);
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 

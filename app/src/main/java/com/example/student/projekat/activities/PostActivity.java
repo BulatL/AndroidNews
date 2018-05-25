@@ -98,7 +98,7 @@ public class PostActivity extends AppCompatActivity {
         TextView name = findViewById(R.id.user_name);
         TextView userName = findViewById(R.id.user_username);
 
-        sharedPreferences = getSharedPreferences(LoginActivity.MyPreferances, Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(LoginActivity.MyPreferences, Context.MODE_PRIVATE);
         /*if(sharedPreferences.contains(LoginActivity.Username)){
             name.setText(sharedPreferences.getString(LoginActivity.Name, ""));
             userName.setText(sharedPreferences.getString(LoginActivity.Username, ""));
@@ -114,6 +114,12 @@ public class PostActivity extends AppCompatActivity {
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
                 posts = response.body();
                 postsAdapter = new PostsAdapter(getApplicationContext(), posts);
+                for (Post p:posts) {
+
+                    System.out.println(p.getTitle());
+                    System.out.println("-----------------------------------------------------------------------------------------------------");
+                    System.out.println(p.getComments());
+                }
                 postsListView.setAdapter(postsAdapter);
 
             }
@@ -185,7 +191,7 @@ public class PostActivity extends AppCompatActivity {
                 startActivity(i2);
                 return true;
             case R.id.logout:
-                SharedPreferences sharedPreferences = getSharedPreferences(LoginActivity.MyPreferances, Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getSharedPreferences(LoginActivity.MyPreferences, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 editor.clear();
