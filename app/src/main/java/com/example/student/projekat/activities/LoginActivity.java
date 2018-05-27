@@ -75,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String username = editTextUsername.getText().toString();
         String password = editTextPassword.getText().toString();
+        System.out.println(username + "  ---------------------------------------------");
         if(validateLogin(username, password)){
             doLogin(username, password);
         }

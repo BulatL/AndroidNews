@@ -7,7 +7,7 @@
   </component>
   <component name="AndroidLogFilters">
     <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2de4c3d-4bd8-4275-9fbf-4828edbac272" name="Default" comment="">
@@ -19,29 +19,8 @@
       <change beforePath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.bin" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.lock" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/activities/CreatePostActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/activities/CreatePostActivity.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/activities/LoginActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/activities/LoginActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/activities/PostActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/activities/PostActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/activities/ReadPostActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/activities/ReadPostActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/adapters/CommentsAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/adapters/CommentsAdapter.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/adapters/PostsAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/adapters/PostsAdapter.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/model/Post.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/model/Post.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/model/Tag.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/model/Tag.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/model/User.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/model/User.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/service/PostService.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/service/PostService.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/service/ServiceUtils.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/service/ServiceUtils.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/drawable/ic_add_black_24dp.xml" afterPath="$PROJECT_DIR$/app/src/main/res/drawable/ic_add_green_24dp.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_create_post.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_create_post.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_post.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_post.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_read_post.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_read_post.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/comment_item.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/comment_item.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/post_item.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/post_item.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/menu/main_menu.xml" afterPath="$PROJECT_DIR$/app/src/main/res/menu/main_menu.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -77,71 +56,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="comment_item.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/comment_item.xml">
+      <file leaf-file-name="LoginActivity.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/activities/LoginActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="409">
-              <caret line="33" column="48" lean-forward="false" selection-start-line="33" selection-start-column="48" selection-end-line="33" selection-end-column="48" />
-              <folding />
-            </state>
-          </provider>
-          <provider editor-type-id="android-designer2">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CommentsAdapter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/adapters/CommentsAdapter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-204">
-              <caret line="36" column="5" lean-forward="true" selection-start-line="36" selection-start-column="5" selection-end-line="36" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PostsAdapter.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/adapters/PostsAdapter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="659">
-              <caret line="122" column="5" lean-forward="false" selection-start-line="122" selection-start-column="5" selection-end-line="122" selection-end-column="5" />
+            <state relative-caret-position="618">
+              <caret line="111" column="22" lean-forward="false" selection-start-line="111" selection-start-column="22" selection-end-line="111" selection-end-column="22" />
               <folding>
-                <element signature="e#3658#3818#0" expanded="true" />
-                <element signature="e#3817#3818#0" expanded="true" />
+                <element signature="e#4824#4825#0" expanded="true" />
+                <element signature="e#4855#4856#0" expanded="true" />
+                <element signature="e#4900#4901#0" expanded="true" />
+                <element signature="e#4930#4931#0" expanded="true" />
+                <element signature="e#4978#4979#0" expanded="true" />
+                <element signature="e#5011#5012#0" expanded="true" />
+                <element signature="e#5057#5058#0" expanded="true" />
+                <element signature="e#5088#5089#0" expanded="true" />
+                <element signature="e#5135#5136#0" expanded="true" />
+                <element signature="e#5167#5168#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="post_item.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/post_item.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="94" column="46" lean-forward="false" selection-start-line="94" selection-start-column="46" selection-end-line="94" selection-end-column="46" />
-              <folding />
-            </state>
-          </provider>
-          <provider editor-type-id="android-designer2">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PostService.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/service/PostService.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
-              <caret line="40" column="18" lean-forward="false" selection-start-line="40" selection-start-column="13" selection-end-line="40" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CommentService.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/service/CommentService.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="15" column="17" lean-forward="false" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -2177,7 +2108,6 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/service/CommentService.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_post.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/activities/PostActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/activities/LoginActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_create_post.xml" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/model/User.java" />
@@ -2193,6 +2123,7 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/service/PostService.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/post_item.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/adapters/PostsAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/activities/LoginActivity.java" />
       </list>
     </option>
   </component>
@@ -2473,7 +2404,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928476" sideWeight="0.49614397" order="11" side_tool="false" content_ui="tabs" />
@@ -2481,12 +2411,12 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32253712" sideWeight="0.50771207" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4534413" sideWeight="0.50771207" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969153" sideWeight="0.76283616" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928476" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928476" sideWeight="0.4974293" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928476" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4534413" sideWeight="0.4922879" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3846154" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Logcat" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.5398111" sideWeight="0.4922879" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -2512,8 +2442,8 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32253712" sideWeight="0.50771207" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4534413" sideWeight="0.4922879" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4534413" sideWeight="0.50771207" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.5398111" sideWeight="0.4922879" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="combo" />
@@ -2530,9 +2460,9 @@
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969153" sideWeight="0.76283616" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928476" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928476" sideWeight="0.4974293" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928476" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3846154" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22172236" sideWeight="0.48319328" order="4" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22172236" sideWeight="0.48319328" order="4" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969153" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -2609,17 +2539,17 @@
           <folding>
             <element signature="method#onOptionsItemSelected#0;class#ReadPostActivity#0" expanded="false" />
             <element signature="method#onCreateOptionsMenu#0;class#ReadPostActivity#0" expanded="false" />
-            <element signature="e#10129#10130#0" expanded="true" />
-            <element signature="e#10160#10161#0" expanded="true" />
-            <element signature="e#10205#10206#0" expanded="true" />
-            <element signature="e#10235#10236#0" expanded="true" />
-            <element signature="e#10283#10284#0" expanded="true" />
-            <element signature="e#10316#10317#0" expanded="true" />
-            <element signature="e#10362#10363#0" expanded="true" />
-            <element signature="e#10393#10394#0" expanded="true" />
+            <element signature="e#10129#10130#0" expanded="false" />
+            <element signature="e#10160#10161#0" expanded="false" />
+            <element signature="e#10205#10206#0" expanded="false" />
+            <element signature="e#10235#10236#0" expanded="false" />
+            <element signature="e#10283#10284#0" expanded="false" />
+            <element signature="e#10316#10317#0" expanded="false" />
+            <element signature="e#10362#10363#0" expanded="false" />
+            <element signature="e#10393#10394#0" expanded="false" />
             <element signature="method#onResume#0;class#ReadPostActivity#0" expanded="false" />
-            <element signature="e#10949#10950#0" expanded="true" />
-            <element signature="e#10982#10983#0" expanded="true" />
+            <element signature="e#10949#10950#0" expanded="false" />
+            <element signature="e#10982#10983#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2648,8 +2578,8 @@
         <state relative-caret-position="527">
           <caret line="46" column="62" lean-forward="false" selection-start-line="46" selection-start-column="62" selection-end-line="46" selection-end-column="62" />
           <folding>
-            <element signature="e#3658#3818#0" expanded="true" />
-            <element signature="e#3817#3818#0" expanded="true" />
+            <element signature="e#3658#3818#0" expanded="false" />
+            <element signature="e#3817#3818#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2679,25 +2609,6 @@
       </provider>
       <provider editor-type-id="android-designer2">
         <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/activities/LoginActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-331">
-          <caret line="38" column="24" lean-forward="false" selection-start-line="38" selection-start-column="8" selection-end-line="38" selection-end-column="24" />
-          <folding>
-            <element signature="e#4734#4735#0" expanded="false" />
-            <element signature="e#4765#4766#0" expanded="false" />
-            <element signature="e#4810#4811#0" expanded="false" />
-            <element signature="e#4840#4841#0" expanded="false" />
-            <element signature="e#4888#4889#0" expanded="false" />
-            <element signature="e#4921#4922#0" expanded="false" />
-            <element signature="e#4967#4968#0" expanded="false" />
-            <element signature="e#4998#4999#0" expanded="false" />
-            <element signature="e#5045#5046#0" expanded="false" />
-            <element signature="e#5077#5078#0" expanded="false" />
-          </folding>
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_create_post.xml">
@@ -2843,16 +2754,16 @@
           <folding>
             <element signature="method#onOptionsItemSelected#0;class#ReadPostActivity#0" expanded="false" />
             <element signature="method#onCreateOptionsMenu#0;class#ReadPostActivity#0" expanded="false" />
-            <element signature="e#10129#10130#0" expanded="true" />
-            <element signature="e#10160#10161#0" expanded="true" />
-            <element signature="e#10205#10206#0" expanded="true" />
-            <element signature="e#10235#10236#0" expanded="true" />
-            <element signature="e#10283#10284#0" expanded="true" />
-            <element signature="e#10316#10317#0" expanded="true" />
-            <element signature="e#10362#10363#0" expanded="true" />
-            <element signature="e#10393#10394#0" expanded="true" />
-            <element signature="e#10949#10950#0" expanded="true" />
-            <element signature="e#10982#10983#0" expanded="true" />
+            <element signature="e#10129#10130#0" expanded="false" />
+            <element signature="e#10160#10161#0" expanded="false" />
+            <element signature="e#10205#10206#0" expanded="false" />
+            <element signature="e#10235#10236#0" expanded="false" />
+            <element signature="e#10283#10284#0" expanded="false" />
+            <element signature="e#10316#10317#0" expanded="false" />
+            <element signature="e#10362#10363#0" expanded="false" />
+            <element signature="e#10393#10394#0" expanded="false" />
+            <element signature="e#10949#10950#0" expanded="false" />
+            <element signature="e#10982#10983#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2877,22 +2788,6 @@
       </provider>
       <provider editor-type-id="android-designer2">
         <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/service/CommentService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="15" column="17" lean-forward="false" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/service/PostService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="40" column="18" lean-forward="false" selection-start-line="40" selection-start-column="13" selection-end-line="40" selection-end-column="18" />
-          <folding />
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/activities/PostActivity.java">
@@ -2922,17 +2817,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/post_item.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="94" column="46" lean-forward="false" selection-start-line="94" selection-start-column="46" selection-end-line="94" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/comment_item.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="409">
@@ -2947,18 +2831,64 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/adapters/CommentsAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-204">
-          <caret line="36" column="5" lean-forward="true" selection-start-line="36" selection-start-column="5" selection-end-line="36" selection-end-column="5" />
+          <caret line="36" column="5" lean-forward="false" selection-start-line="36" selection-start-column="5" selection-end-line="36" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/adapters/PostsAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="659">
-          <caret line="122" column="5" lean-forward="false" selection-start-line="122" selection-start-column="5" selection-end-line="122" selection-end-column="5" />
+        <state relative-caret-position="353">
+          <caret line="74" column="44" lean-forward="false" selection-start-line="74" selection-start-column="8" selection-end-line="74" selection-end-column="44" />
           <folding>
-            <element signature="e#3658#3818#0" expanded="true" />
-            <element signature="e#3817#3818#0" expanded="true" />
+            <element signature="e#3658#3818#0" expanded="false" />
+            <element signature="e#3817#3818#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/post_item.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="94" column="46" lean-forward="false" selection-start-line="94" selection-start-column="46" selection-end-line="94" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/service/PostService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="40" column="18" lean-forward="false" selection-start-line="40" selection-start-column="13" selection-end-line="40" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/service/CommentService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="15" column="17" lean-forward="false" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/student/projekat/activities/LoginActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="618">
+          <caret line="111" column="22" lean-forward="false" selection-start-line="111" selection-start-column="22" selection-end-line="111" selection-end-column="22" />
+          <folding>
+            <element signature="e#4824#4825#0" expanded="true" />
+            <element signature="e#4855#4856#0" expanded="true" />
+            <element signature="e#4900#4901#0" expanded="true" />
+            <element signature="e#4930#4931#0" expanded="true" />
+            <element signature="e#4978#4979#0" expanded="true" />
+            <element signature="e#5011#5012#0" expanded="true" />
+            <element signature="e#5057#5058#0" expanded="true" />
+            <element signature="e#5088#5089#0" expanded="true" />
+            <element signature="e#5135#5136#0" expanded="true" />
+            <element signature="e#5167#5168#0" expanded="true" />
           </folding>
         </state>
       </provider>
