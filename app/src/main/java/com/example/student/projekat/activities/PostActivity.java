@@ -98,15 +98,16 @@ public class PostActivity extends AppCompatActivity {
         TextView name = findViewById(R.id.user_name);
         TextView userName = findViewById(R.id.user_username);
 
-        sharedPreferences = getSharedPreferences(LoginActivity.MyPreferences, Context.MODE_PRIVATE);
-        /*if(sharedPreferences.contains(LoginActivity.Username)){
+        /*sharedPreferences = getSharedPreferences(LoginActivity.MyPreferences, Context.MODE_PRIVATE);
+        if(sharedPreferences.contains(LoginActivity.Username)){
             name.setText(sharedPreferences.getString(LoginActivity.Name, ""));
             userName.setText(sharedPreferences.getString(LoginActivity.Username, ""));
-        }
-*/
+        }*/
+
         postsListView = findViewById(R.id.listOfPosts);
         PostService postService = ServiceUtils.postService;
-
+        //postsAdapter = new PostsAdapter(getApplicationContext(), posts);
+        //postsListView.setAdapter(postsAdapter);
         Call call = postService.getPosts();
 
         call.enqueue(new Callback<List<Post>>() {
@@ -116,9 +117,9 @@ public class PostActivity extends AppCompatActivity {
                 postsAdapter = new PostsAdapter(getApplicationContext(), posts);
                 for (Post p:posts) {
 
-                    System.out.println(p.getTitle());
+                    System.out.println(p.getTitle());System.out.println(p.getComments());
                     System.out.println("-----------------------------------------------------------------------------------------------------");
-                    System.out.println(p.getComments());
+
                 }
                 postsListView.setAdapter(postsAdapter);
 
@@ -130,7 +131,7 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        postsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*postsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 post = posts.get(position);
@@ -142,16 +143,16 @@ public class PostActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("MyPref", Context.MODE_PRIVATE);
 
-        /*postsAdapter = new PostsAdapter(this, posts);
+        postsAdapter = new PostsAdapter(this, posts);
         ListView postsListView = findViewById(R.id.listOfPosts);
         postsListView.setAdapter(postsAdapter);
 
         User author = new User(1, "A", null, "admin", "admin", Collections.<Post>emptyList(), Collections.<Comment>emptyList());
         Bitmap postImage = BitmapFactory.decodeResource(getResources(), R.drawable.keyboard);
 
-        posts.addAll(Arrays.asList(
+         posts.addAll(Arrays.asList(
                 new Post(1, "Title 1", "Neki deskripshn, lalala",
-                        postImage, author, new Date(1525199174000L), null,
+                       postImage, author, new Date(1525199174000L), null,
                         Collections.<Tag>emptyList(), Collections.<Comment>emptyList(),
                         10, 13),
                 new Post(2, "Title 2", "Neki deskripshn, lalala",

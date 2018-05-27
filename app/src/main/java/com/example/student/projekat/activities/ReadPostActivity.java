@@ -31,6 +31,7 @@ import com.example.student.projekat.model.User;
 import com.example.student.projekat.service.CommentService;
 import com.example.student.projekat.service.PostService;
 import com.example.student.projekat.service.ServiceUtils;
+import com.example.student.projekat.service.TagService;
 import com.example.student.projekat.util.CommentsDateComparator;
 import com.example.student.projekat.util.CommentsPopularityComparator;
 import com.example.student.projekat.util.PostsDateComparator;
@@ -60,6 +61,8 @@ public class ReadPostActivity extends AppCompatActivity {
     private CommentsAdapter commentsAdapter;
     private SharedPreferences sharedPreferences;
     private ListView commentsListView;
+    private List<Tag> tags = new ArrayList<>();
+    private Post post;
 
 
     @Override
@@ -104,35 +107,89 @@ public class ReadPostActivity extends AppCompatActivity {
                     }
                 });
 
-        Post post = (Post) getIntent().getSerializableExtra("post");
+        post = (Post) getIntent().getSerializableExtra("post");
 
-        title = (TextView) findViewById(R.id.titleRead);
+
+
+        title =  findViewById(R.id.titleRead);
         title.setText(post.getTitle());
 
-        author = (TextView) findViewById(R.id.AuthorRead);
+        System.out.println( "d");
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++Author");
+        author =  findViewById(R.id.AuthorRead);
         author.setText(post.getAuthor().getUsername());
 
-        dateTime = (TextView) findViewById(R.id.dateTime);
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++Time");
+        dateTime = findViewById(R.id.dateTime);
         dateTime.setText(post.getDate().toString());
 
-        description = (TextView) findViewById(R.id.description);
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++Description");
+        description =  findViewById(R.id.description);
         description.setText(post.getDescription());
 
-        tag = (TextView) findViewById(R.id.tagRead);
-        tag.setText("#GrandVesti");
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++Pocela petlja");
+        tag =  findViewById(R.id.tagRead);
+        String tags = "";
+        if(post.getTags() !=null) {
+            for (Tag t : post.getTags()) {
+                tags += t.getName()+ " ";
+                System.out.println("/////////////////////////////////////////////////////////////////////////");
+                System.out.println(t.getName());
+            }
+        }
+        else{
+            System.out.println("-**-------------------------///////////////////////////--------------");
+            System.out.println("getTags je null");
+        }
+        System.out.println("===============================Zavrsio sa petljama");
+        tag.setText(tags);
 
-        like = (TextView) findViewById(R.id.likes);
+        like =  findViewById(R.id.likes);
         like.setText(String.valueOf(post.getLikes()));
 
-        disLikes = (TextView) findViewById(R.id.disLikes);
+        disLikes = findViewById(R.id.disLikes);
         disLikes.setText(String.valueOf(post.getDislikes()));
 
         myBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.keyboard);
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setImageBitmap(myBitmap);
 
-        commentsAdapter = new CommentsAdapter(this, comments);
+        commentsAdapter = new CommentsAdapter(getApplicationContext(), comments);
         commentsListView = findViewById(R.id.listOfComments);
+        if(commentsListView == null){
+            System.out.println("------------------------------------------ListView je null");
+        }
+        else{
+            System.out.println("----------------------------------------------ListView nije null");
+        }
+        CommentService commentService = ServiceUtils.commentService;
+
+        Call call = commentService.getCommentsByPost(post.getId());
+
+        call.enqueue(new Callback<List<Comment>>() {
+            @Override
+            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+                comments = response.body();
+                commentsAdapter = new CommentsAdapter(getApplicationContext(), comments);
+                if(commentsAdapter==null) {
+                    System.out.println("//////////////////////////////////////// nesto ne valja sa adapterom");
+                }
+                else{System.out.println("//////////////////////////// adapter valja");}
+                for (Comment c: comments) {
+                    System.out.println(c.getDescription());
+                    System.out.println("-------------------------------------------");
+                    System.out.println(comments);
+                }
+                commentsListView.setAdapter(commentsAdapter);
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
+
 
         /*User author = new User(1, "A", null, "admin", "admin", Collections.<Post>emptyList(), Collections.<Comment>emptyList());
         Bitmap postImage = BitmapFactory.decodeResource(getResources(), R.drawable.keyboard);
@@ -146,31 +203,18 @@ public class ReadPostActivity extends AppCompatActivity {
                         1)
         ));*/
 
-        CommentService commentService = ServiceUtils.commentService;
-
-        Call call = commentService.getCommentsByPost(post.getId());
-
-        call.enqueue(new Callback<List<Comment>>() {
-            @Override
-            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
-                comments = response.body();
-                commentsAdapter = new CommentsAdapter(getApplicationContext(), comments);
-                for (Comment c: comments) {
-                    System.out.println(c.getDescription());
-                    System.out.println("-------------------------------------------");
-                }
-                commentsListView.setAdapter(commentsAdapter);
-
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-
-            }
-        });
-
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+    }
+
+    public void btnLikePost(View view){
+        Toast.makeText(ReadPostActivity.this, "U like this post",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    public void btnDislikePost(View view){
+        Toast.makeText(ReadPostActivity.this, "U dislike this post",
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -225,7 +269,7 @@ public class ReadPostActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String sortiranje_po = sharedPreferences.getString("sortiranje_komentara_objava", "Datumu");
+        /*String sortiranje_po = sharedPreferences.getString("sortiranje_komentara_objava", "Datumu");
 
         if (sortiranje_po.equals("Datumu")) {
             Collections.sort(comments, new CommentsDateComparator());
@@ -233,7 +277,7 @@ public class ReadPostActivity extends AppCompatActivity {
         } else {
             Collections.sort(comments, new CommentsPopularityComparator());
             commentsAdapter.notifyDataSetChanged();
-        }
+        }*/
     }
 
     @Override

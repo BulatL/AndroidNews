@@ -12,7 +12,7 @@ public class Post implements Serializable {
     private int id;
     private String title;
     private String description;
-    private ProxyBitmap photo;
+    private Bitmap photo;
     private User author;
     private Date date;
     private Location location;
@@ -25,7 +25,7 @@ public class Post implements Serializable {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.photo = new ProxyBitmap(photo);
+        this.photo = photo;
         this.author = author;
         this.date = date;
         this.location = location;
@@ -33,6 +33,8 @@ public class Post implements Serializable {
         this.comments = comments;
         this.likes = likes;
         this.dislikes = dislikes;
+    }
+    public Post(){
     }
 
     public int getId() {
@@ -59,11 +61,11 @@ public class Post implements Serializable {
         this.description = description;
     }
 
-    public ProxyBitmap getPhoto() {
+    public Bitmap getPhoto() {
         return photo;
     }
 
-    public void setPhoto(ProxyBitmap photo) {
+    public void setPhoto(Bitmap photo) {
         this.photo = photo;
     }
 

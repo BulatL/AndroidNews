@@ -36,9 +36,8 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
         this.context = context;
     }
 
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+    public View getView(int position, View convertView,  ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.comment_item, parent, false);
         }

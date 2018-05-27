@@ -9,7 +9,7 @@ public class User implements Serializable {
 
     private int id;
     private String name;
-    private ProxyBitmap photo;
+    private Bitmap photo;
     private String username;
     private String password;
     private List<Post> posts;
@@ -18,7 +18,7 @@ public class User implements Serializable {
     public User(int id, String name, Bitmap photo, String username, String password, List<Post> posts, List<Comment> comments) {
         this.id = id;
         this.name = name;
-        this.photo = new ProxyBitmap(photo);
+        this.photo = photo;
         this.username = username;
         this.password = password;
         this.posts = posts;
@@ -41,11 +41,11 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public ProxyBitmap getPhoto() {
+    public Bitmap getPhoto() {
         return photo;
     }
 
-    public void setPhoto(ProxyBitmap photo) {
+    public void setPhoto(Bitmap photo) {
         this.photo = photo;
     }
 

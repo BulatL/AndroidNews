@@ -1,6 +1,11 @@
 package com.example.student.projekat.activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,12 +17,43 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.student.projekat.R;
+import com.example.student.projekat.model.Comment;
+import com.example.student.projekat.model.Post;
+import com.example.student.projekat.model.Tag;
+import com.example.student.projekat.model.User;
+import com.example.student.projekat.service.PostService;
+import com.example.student.projekat.service.ServiceUtils;
+import com.example.student.projekat.service.TagService;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CreatePostActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout ;
+    private EditText titleEdit;
+    private EditText descriptionEdit;
+    private EditText tagsEdit;
+    private Post postResponse;
+    public static final int PICK_IMAGE = 1;
+    private Bitmap bitmap;
+    private byte[] byteArray;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,17 +126,128 @@ public class CreatePostActivity extends AppCompatActivity {
         menuInflater.inflate(R.menu.main_menu, menu);
         return true;
     }
-    public void btnCreatePost(View view) {
-        Toast.makeText(CreatePostActivity.this, "u click on create post button",
-                Toast.LENGTH_SHORT).show();
 
-    }
+    public void btnUploadImage(View view){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
 
-    public void btnUploadImage(View view) {
         Toast.makeText(CreatePostActivity.this, "u click on upload image button",
                 Toast.LENGTH_SHORT).show();
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+            System.out.println(data.getData());
+            Uri selectedImage = data.getData();
+            System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-----------------------------*");
+            System.out.println(selectedImage);
+            bitmap = null;
+            try {
+
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+
+                ImageView previewImage = findViewById(R.id.previewImage);
+                previewImage.setImageBitmap(bitmap);
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
+                byteArray = stream.toByteArray();
+
+            }catch (FileNotFoundException e){
+                e.printStackTrace();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void btnCreatePost(View view) {
+
+        titleEdit = findViewById(R.id.titleCreate);
+        descriptionEdit = findViewById(R.id.textCreate);
+
+        String title = titleEdit.getText().toString();
+        String description = descriptionEdit.getText().toString();
+
+        Date date = Calendar.getInstance().getTime();
+
+
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.android_robot);
+        User author = new User(1, "Marko", null, "marko", "123", null, null);
+
+
+        Post post = new Post();
+        post.setTitle(title);
+        post.setDescription(description);
+        post.setDate(date);
+        post.setAuthor(author);
+        post.setPhoto(null);
+
+
+        PostService postService = ServiceUtils.postService;
+        Call<Post> call = postService.createPost(post);
+        call.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                postResponse = response.body();
+                Toast.makeText(CreatePostActivity.this, "u click on create post button",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+
+            }
+        });
+        addTag();
+
+    }
+
+    public void addTag(){
+        tagsEdit = findViewById(R.id.tagsCreate);
+        TagService tagService = ServiceUtils.tagService;
+        String tags = tagsEdit.getText().toString();
+        Tag tag = new Tag();
+        tag.setName(tags);
+        Call<Tag> callTags = tagService.addTag(tag);
+        callTags.enqueue(new Callback<Tag>() {
+            @Override
+            public void onResponse(Call<Tag> call, Response<Tag> response) {
+                Tag tagResponse = response.body();
+                setTagsInPost(postResponse.getId(), tagResponse.getId());
+            }
+
+            @Override
+            public void onFailure(Call<Tag> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void setTagsInPost(int postId, int tagId){
+        PostService postService = ServiceUtils.postService;
+        System.out.println("-*-*-*-*-*-*//////////////////////----------------------------------------------------");
+        System.out.println(postId);
+        System.out.println(tagId);
+        Call<Post> call = postService.setTagsInPost(postId,tagId);
+        System.out.println(call);
+        call.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                System.out.println(response.errorBody());
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                System.out.println(t.getMessage());
+            }
+        });
+    }
+
     @Override
     protected void onStart() {
         super.onStart();

@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceUtils {
 
-    static final String BASE_URL="http://c05a0acc.ngrok.io/api/";
+    static final String BASE_URL="http://8263316f.ngrok.io/api/";
 
 
     public static OkHttpClient test(){
@@ -37,11 +37,6 @@ public class ServiceUtils {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(test())
             .build();
-
-//    static Gson gson = new GsonBuilder()
-//            .registerTypeAdapter(Date.class, DateSerialization.getUnixEpochDateTypeAdapter())
-//            .create();
-
 
 
     public static UserService userService=retrofit.create(UserService.class);

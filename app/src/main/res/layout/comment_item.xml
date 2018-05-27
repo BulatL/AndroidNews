@@ -20,6 +20,7 @@
         android:layout_margin="5dp"
         android:layout_toEndOf="@id/comment_image"
         android:gravity="center"
+        android:textColor="#000"
         tools:text="@tools:sample/lorem" />
 
 
@@ -39,6 +40,7 @@
         android:layout_below="@id/comment_title"
         android:layout_toEndOf="@id/comment_image"
         android:gravity="center"
+        android:textColor="#000"
         tools:text="@tools:sample/lorem" />
 
     <RelativeLayout
@@ -54,6 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:textColor="#000"
             tools:text="by AuthorName" />
 
         <TextView
@@ -63,6 +66,7 @@
             android:layout_marginTop="15dp"
             android:text="2000"
             android:layout_marginRight="5dp"
+            android:textColor="#000"
             android:layout_toLeftOf="@id/image_likes"
             />
         <ImageButton
@@ -93,6 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="155"
+            android:textColor="#000"
             android:layout_alignParentRight="true"
             />
 

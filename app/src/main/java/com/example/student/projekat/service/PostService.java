@@ -35,10 +35,10 @@ public interface PostService {
     @PUT("posts/{id}")
     Call<Post> addLikeDislike(@Body Post post,@Path("id") int id);
 
-    @PUT("posts/setTags/{postId}/{tagId}")
+    @POST("posts/setTags/{postId}/{tagId}")
     Call<Post> setTagsInPost(@Path("postId") int postId,@Path("tagId") int tagId);
 
     @DELETE("posts/{id}")
-    Call<Post> deletePost(@Path("id") int id);
+    Call<Void> deletePost(@Path("id") int id);
 
 }
