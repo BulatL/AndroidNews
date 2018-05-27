@@ -12,19 +12,19 @@
         android:layout_width="75dp"
         android:layout_height="75dp" />
     <TextView
-        android:id="@+id/user_username"
+        android:id="@+id/username_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Luka Bulatovic"
-        android:textColor="@color/white"
+
+        android:textColor="#000"
         android:textStyle="bold"
         android:layout_marginTop="8dp"/>
     <TextView
-        android:id="@+id/user_name"
+        android:id="@+id/name_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Luka.bulatovic97@hotmail.com"
-        android:textColor="@color/white"
+
+        android:textColor="#000"
         android:textStyle="bold"
         android:layout_marginTop="2dp"/>
 </LinearLayout>

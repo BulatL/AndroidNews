@@ -95,19 +95,10 @@ public class PostActivity extends AppCompatActivity {
                         return true;
                     }
                 });
-        TextView name = findViewById(R.id.user_name);
-        TextView userName = findViewById(R.id.user_username);
-
-        /*sharedPreferences = getSharedPreferences(LoginActivity.MyPreferences, Context.MODE_PRIVATE);
-        if(sharedPreferences.contains(LoginActivity.Username)){
-            name.setText(sharedPreferences.getString(LoginActivity.Name, ""));
-            userName.setText(sharedPreferences.getString(LoginActivity.Username, ""));
-        }*/
 
         postsListView = findViewById(R.id.listOfPosts);
         PostService postService = ServiceUtils.postService;
-        //postsAdapter = new PostsAdapter(getApplicationContext(), posts);
-        //postsListView.setAdapter(postsAdapter);
+
         Call call = postService.getPosts();
 
         call.enqueue(new Callback<List<Post>>() {
@@ -115,12 +106,7 @@ public class PostActivity extends AppCompatActivity {
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
                 posts = response.body();
                 postsAdapter = new PostsAdapter(getApplicationContext(), posts);
-                for (Post p:posts) {
 
-                    System.out.println(p.getTitle());System.out.println(p.getComments());
-                    System.out.println("-----------------------------------------------------------------------------------------------------");
-
-                }
                 postsListView.setAdapter(postsAdapter);
 
             }
@@ -170,6 +156,22 @@ public class PostActivity extends AppCompatActivity {
         //mDrawerLayout.addDrawerListener(mToggle);
 
         //mToggle.syncState();
+
+        View headerView = getLayoutInflater().inflate(R.layout.header,null);
+
+        TextView name = headerView.findViewById(R.id.name_header);
+        TextView userName = headerView.findViewById(R.id.username_header);
+
+
+
+        sharedPreferences = getSharedPreferences(LoginActivity.MyPreferences, Context.MODE_PRIVATE);
+        if(sharedPreferences.contains(LoginActivity.Username)){
+            name.setText(sharedPreferences.getString(LoginActivity.Name, ""));
+            userName.setText(sharedPreferences.getString(LoginActivity.Username, ""));
+            userName.setVisibility(View.VISIBLE);
+            name.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override

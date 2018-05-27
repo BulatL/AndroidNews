@@ -40,11 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.password);
         btnLogin = findViewById(R.id.loginBtn);
 
-        sharedPreferences = getSharedPreferences(MyPreferences, Context.MODE_PRIVATE);
 
-        String userNamePref = sharedPreferences.getString(Username, "");
-
-        System.out.println(userNamePref);
 
 
         /*if (userNamePref.equals("")) {
@@ -100,17 +96,25 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 User user = response.body();
 
-                //SharedPreferences.Editor editor = sharedPreferences.edit();
-                //editor.putString(Name,user.getName());
-                //editor.commit();
-                System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
-                System.out.println(response.code());
+
 
                 if(response.code()!= 200){
                     Toast.makeText(LoginActivity.this,"Username or password is incorrect",Toast.LENGTH_SHORT).show();
                 }
                 else {
                     if (username.equals(user.getUsername()) && password.equals(user.getPassword())) {
+
+
+                        sharedPreferences = getSharedPreferences(MyPreferences, Context.MODE_PRIVATE);
+                        String userNamePref = sharedPreferences.getString(Username, "");
+                        System.out.println(userNamePref);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString(Name,user.getName());
+                        editor.putString(Username, username);
+                        editor.commit();
+                        System.out.println(username);
+                        System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
+                        System.out.println(response.code());
 
                         Intent intent = new Intent(LoginActivity.this, PostActivity.class);
                         startActivity(intent);

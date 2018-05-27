@@ -2,6 +2,7 @@ package com.example.student.projekat.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
@@ -10,12 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.student.projekat.R;
+import com.example.student.projekat.activities.LoginActivity;
 import com.example.student.projekat.activities.ReadPostActivity;
 import com.example.student.projekat.model.Comment;
 import com.example.student.projekat.model.Post;
@@ -39,6 +42,7 @@ public class PostsAdapter extends ArrayAdapter<Post> {
     private List<Comment> comments = new ArrayList<>();
     private PostService postService;
     private Post post;
+    private SharedPreferences sharedPreferences;
 
     public PostsAdapter(Context context, List<Post> posts) {
         super(context, 0, posts);
@@ -52,6 +56,24 @@ public class PostsAdapter extends ArrayAdapter<Post> {
             convertView = LayoutInflater.from(context).inflate(R.layout.post_item, parent, false);
         }
 
+        sharedPreferences = this.getContext().getSharedPreferences(LoginActivity.Username,Context.MODE_PRIVATE);
+        System.out.println("                                               Usao je u postAdapter                                      ");
+        if(sharedPreferences.contains(LoginActivity.Username)) {
+
+            String userName = sharedPreferences.getString(LoginActivity.Username, "");
+            if(userName!=post.getAuthor().getUsername()){
+                System.out.println("09999999999999999999999999999999999999999999999999999999999999999999");
+                System.out.println(userName);
+                System.out.println(post.getAuthor().getUsername());
+                final ImageButton btnDelete = convertView.findViewById(R.id.btnDeletePost);
+                btnDelete.setVisibility(View.GONE);
+            }
+            else {
+                System.out.println("7777777777777777777777777777777777777777777777777777777777  ne valja");
+            }
+        }else{
+            System.out.println("1232131312312333333333333333333333333333333333  nema ovoga");
+        }
 
         final ImageView image = convertView.findViewById(R.id.post_image);
         final TextView title = convertView.findViewById(R.id.post_title);
@@ -64,17 +86,12 @@ public class PostsAdapter extends ArrayAdapter<Post> {
             image.setImageBitmap(post.getPhoto());
         }
         image.setImageResource(R.drawable.keyboard);
-        title.setText("neki title");
-        //title.setText(post.getTitle());
+        title.setText(post.getTitle());
         desc.setText(post.getDescription());
         author.setText("by " +post.getAuthor().getUsername());
         likes.setText(String.valueOf(post.getLikes()));
         dislikes.setText(String.valueOf(post.getDislikes()));
 
-        System.out.println("--*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
-        System.out.println(post.getTitle());
-        System.out.println(post.getDescription());
-        System.out.println(post.getAuthor().getUsername());
 
         TagService tagService = ServiceUtils.tagService;
         Call callT = tagService.getTagsByPost(post.getId());
@@ -83,10 +100,7 @@ public class PostsAdapter extends ArrayAdapter<Post> {
             public void onResponse(Call call, Response response) {
                 List<Tag> tags = (List<Tag>)response.body();
                 post.setTags(tags);
-                System.out.println("---------------------------------taaaaaags-------------------");
-                for (Tag t:post.getTags()) {
-                    System.out.println(t.getName());
-                }
+
             }
 
             @Override

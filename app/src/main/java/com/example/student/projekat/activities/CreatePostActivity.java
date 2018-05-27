@@ -1,7 +1,9 @@
 package com.example.student.projekat.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -30,6 +32,7 @@ import com.example.student.projekat.model.User;
 import com.example.student.projekat.service.PostService;
 import com.example.student.projekat.service.ServiceUtils;
 import com.example.student.projekat.service.TagService;
+import com.example.student.projekat.service.UserService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -53,6 +56,8 @@ public class CreatePostActivity extends AppCompatActivity {
     public static final int PICK_IMAGE = 1;
     private Bitmap bitmap;
     private byte[] byteArray;
+    private User author;
+    private SharedPreferences sharedPreferences;
 
 
     @Override
@@ -175,17 +180,32 @@ public class CreatePostActivity extends AppCompatActivity {
 
         Date date = Calendar.getInstance().getTime();
 
+        sharedPreferences = getSharedPreferences(LoginActivity.MyPreferences, Context.MODE_PRIVATE);
+        if(sharedPreferences.contains(LoginActivity.Username)) {
+            String userName = sharedPreferences.getString(LoginActivity.Username, "");
 
-        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.android_robot);
-        User author = new User(1, "Marko", null, "marko", "123", null, null);
+            UserService userService = ServiceUtils.userService;
 
+            Call<User> call = userService.getUserByUsername(userName);
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    author= response.body();
+                    author.setPhoto(bitmap);
+                }
 
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+
+                }
+            });
+        }
         Post post = new Post();
         post.setTitle(title);
         post.setDescription(description);
         post.setDate(date);
         post.setAuthor(author);
-        post.setPhoto(null);
+        post.setPhoto(bitmap);
 
 
         PostService postService = ServiceUtils.postService;
