@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -56,8 +57,9 @@ public class CreatePostActivity extends AppCompatActivity {
     public static final int PICK_IMAGE = 1;
     private Bitmap bitmap;
     private byte[] byteArray;
-    private User author;
+    private User author = new User();
     private SharedPreferences sharedPreferences;
+    private Post post = new Post();
 
 
     @Override
@@ -99,8 +101,14 @@ public class CreatePostActivity extends AppCompatActivity {
                         }
 
                         return true;
-                    }
+                        }
                 });
+        EditText title = findViewById(R.id.titleCreate);
+        title.setFilters(new InputFilter[] {new InputFilter.LengthFilter(250)});
+        EditText description = findViewById(R.id.textCreate);
+        description.setFilters(new InputFilter[] {new InputFilter.LengthFilter(250)});
+        EditText tags = findViewById(R.id.tagsCreate);
+        tags.setFilters(new InputFilter[] {new InputFilter.LengthFilter(250)});
     }
 
     @Override
@@ -146,10 +154,8 @@ public class CreatePostActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-            System.out.println(data.getData());
+
             Uri selectedImage = data.getData();
-            System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-----------------------------*");
-            System.out.println(selectedImage);
             bitmap = null;
             try {
 
@@ -200,12 +206,12 @@ public class CreatePostActivity extends AppCompatActivity {
                 }
             });
         }
-        Post post = new Post();
+        author.setUsername(sharedPreferences.getString(LoginActivity.Username, ""));
         post.setTitle(title);
         post.setDescription(description);
         post.setDate(date);
         post.setAuthor(author);
-        post.setPhoto(bitmap);
+        post.setPhoto(null);
 
 
         PostService postService = ServiceUtils.postService;
@@ -214,8 +220,10 @@ public class CreatePostActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
                 postResponse = response.body();
-                Toast.makeText(CreatePostActivity.this, "u click on create post button",
+                System.out.println("post id " + postResponse);
+                Toast.makeText(CreatePostActivity.this, "u create post successfully",
                         Toast.LENGTH_SHORT).show();
+                addTag();
             }
 
             @Override
@@ -223,7 +231,7 @@ public class CreatePostActivity extends AppCompatActivity {
 
             }
         });
-        addTag();
+
 
     }
 
@@ -238,6 +246,7 @@ public class CreatePostActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Tag> call, Response<Tag> response) {
                 Tag tagResponse = response.body();
+                System.out.println("tag name " + tagResponse.getName());
                 setTagsInPost(postResponse.getId(), tagResponse.getId());
             }
 
@@ -251,14 +260,18 @@ public class CreatePostActivity extends AppCompatActivity {
     public void setTagsInPost(int postId, int tagId){
         PostService postService = ServiceUtils.postService;
         System.out.println("-*-*-*-*-*-*//////////////////////----------------------------------------------------");
-        System.out.println(postId);
-        System.out.println(tagId);
+        System.out.println("post id "+postId);
+        System.out.println("tag id "+tagId);
         Call<Post> call = postService.setTagsInPost(postId,tagId);
         System.out.println(call);
         call.enqueue(new Callback<Post>() {
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
                 System.out.println(response.errorBody());
+                Intent intent = new Intent(getApplicationContext(), PostActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("post", post);
+                startActivity(intent);
             }
 
             @Override

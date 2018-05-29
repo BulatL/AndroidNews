@@ -15,6 +15,8 @@ public class User implements Serializable {
     private List<Post> posts;
     private List<Comment> comments;
 
+    public User(){}
+
     public User(int id, String name, Bitmap photo, String username, String password, List<Post> posts, List<Comment> comments) {
         this.id = id;
         this.name = name;

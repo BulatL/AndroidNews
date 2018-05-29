@@ -30,7 +30,6 @@
         android:layout_height="70dp"
         android:src="@drawable/ic_clear_red_24dp"
         android:background="@color/white"
-        android:onClick="btnDeleteComment"
         android:layout_alignParentRight="true"/>
 
     <TextView
@@ -39,7 +38,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/comment_title"
         android:layout_toEndOf="@id/comment_image"
-        android:gravity="center"
+        android:layout_toLeftOf="@id/btnDeleteComment"
+        android:gravity="start"
         android:textColor="#000"
         tools:text="@tools:sample/lorem" />
 
@@ -60,39 +60,39 @@
             tools:text="by AuthorName" />
 
         <TextView
-            android:id="@+id/likes"
+            android:id="@+id/likes_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="2000"
             android:layout_marginRight="5dp"
             android:textColor="#000"
-            android:layout_toLeftOf="@id/image_likes"
+            android:layout_toLeftOf="@id/image_likes_comment"
             />
         <ImageButton
-            android:id="@+id/image_likes"
+            android:id="@+id/image_likes_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
             android:layout_marginTop="10dp"
-            android:layout_toLeftOf="@id/image_dislikes"
+            android:layout_toLeftOf="@id/image_dislikes_comment"
             android:layout_marginRight="5dp"
             android:background="@color/white"
-            android:src="@drawable/ic_thumb_up_green_24dp" />
+            android:src="@drawable/ic_thumb_up_dark_green_24dp" />
 
         <ImageButton
-            android:id="@+id/image_dislikes"
+            android:id="@+id/image_dislikes_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
             android:layout_marginTop="10dp"
-            android:layout_toLeftOf="@id/disLikes"
+            android:layout_toLeftOf="@id/disLikes_comment"
             android:layout_marginRight="5dp"
             android:background="@color/white"
-            android:src="@drawable/ic_thumb_down_red_24dp" />
+            android:src="@drawable/ic_thumb_down_dark_red_24dp" />
 
         <TextView
-            android:id="@+id/disLikes"
+            android:id="@+id/disLikes_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"

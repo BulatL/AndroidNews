@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <EditTextPreference
-        android:inputType="date"
-        android:key="pocetni_datum"
-        android:title="Pocetni Datum:" />
+    <PreferenceCategory
+        android:title="General Settings"
+        android:key="general_settings">
 
-    <ListPreference
-        android:defaultValue="Datumu"
-        android:dialogTitle="Sortiranje objava po:"
-        android:entries="@array/sortiranje_objava_po"
-        android:entryValues="@array/sortiranje_objava_po"
-        android:key="sortiranje_objava"
-        android:title="Sortiranje objava" />
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="Sort posts by: "
+            android:entries="@array/sort_post_by"
+            android:entryValues="@array/sort_post_alias"
+            android:key="sort_post"
+            android:title="Sort posts by" />
 
-    <ListPreference
-        android:defaultValue="Datumu"
-        android:dialogTitle="Sortiranje komentara po:"
-        android:entries="@array/sortiranje_komentara_po"
-        android:entryValues="@array/sortiranje_komentara_po"
-        android:key="sortiranje_komentara"
-        android:title="Sortiranje komentara" />
+        <ListPreference
+            android:defaultValue="0"
+            android:dialogTitle="Sort comments by: "
+            android:entries="@array/sort_comment_by"
+            android:entryValues="@array/sort_comment_alias"
+            android:key="sort_comments"
+            android:title="Sort comments by" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

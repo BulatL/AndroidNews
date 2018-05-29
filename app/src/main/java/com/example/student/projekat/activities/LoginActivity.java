@@ -71,7 +71,6 @@ public class LoginActivity extends AppCompatActivity {
 
         String username = editTextUsername.getText().toString();
         String password = editTextPassword.getText().toString();
-        System.out.println(username + "  ---------------------------------------------");
         if(validateLogin(username, password)){
             doLogin(username, password);
         }
@@ -112,6 +111,8 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString(Name,user.getName());
                         editor.putString(Username, username);
                         editor.commit();
+                        String nesto = sharedPreferences.getString(Username, "");
+                        System.out.println("jel upisao dobro? " + nesto);
                         System.out.println(username);
                         System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
                         System.out.println(response.code());

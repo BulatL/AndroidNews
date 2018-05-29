@@ -62,15 +62,6 @@
         <item>3</item>
     </string-array>
 
-    <string-array name="sortiranje_komentara_po">
-        <item>Datumu</item>
-        <item>Popularnosti</item>
-    </string-array>
-    <string-array name="sortiranje_objava_po">
-        <item>Datumu</item>
-        <item>Popularnosti</item>
-    </string-array>
-
     <string-array name="multi_select_list_preference_default_value" />
 
     <string name="pref_title_system_sync_settings">System sync settings</string>

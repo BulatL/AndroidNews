@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceUtils {
 
-    static final String BASE_URL="http://fb00a57c.ngrok.io/api/";
+    static final String BASE_URL="http://791089af.ngrok.io/api/";
 
 
     public static OkHttpClient test(){

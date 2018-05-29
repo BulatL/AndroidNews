@@ -56,24 +56,6 @@ public class PostsAdapter extends ArrayAdapter<Post> {
             convertView = LayoutInflater.from(context).inflate(R.layout.post_item, parent, false);
         }
 
-        sharedPreferences = this.getContext().getSharedPreferences(LoginActivity.Username,Context.MODE_PRIVATE);
-        System.out.println("                                               Usao je u postAdapter                                      ");
-        if(sharedPreferences.contains(LoginActivity.Username)) {
-
-            String userName = sharedPreferences.getString(LoginActivity.Username, "");
-            if(userName!=post.getAuthor().getUsername()){
-                System.out.println("09999999999999999999999999999999999999999999999999999999999999999999");
-                System.out.println(userName);
-                System.out.println(post.getAuthor().getUsername());
-                final ImageButton btnDelete = convertView.findViewById(R.id.btnDeletePost);
-                btnDelete.setVisibility(View.GONE);
-            }
-            else {
-                System.out.println("7777777777777777777777777777777777777777777777777777777777  ne valja");
-            }
-        }else{
-            System.out.println("1232131312312333333333333333333333333333333333  nema ovoga");
-        }
 
         final ImageView image = convertView.findViewById(R.id.post_image);
         final TextView title = convertView.findViewById(R.id.post_title);
@@ -110,30 +92,15 @@ public class PostsAdapter extends ArrayAdapter<Post> {
         });
 
 
-        convertView.setOnClickListener(new View.OnClickListener() {
+        /*convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println("title posta " +post.getTitle());
                 openReadPostActivity(post);
             }
-        });
+        });*/
 
         return convertView;
-    }
-
-    public void btnDeletePost(View view){
-        postService = ServiceUtils.postService;
-        Call<Void> call = postService.deletePost(post.getId());
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                Toast.makeText(getContext(), "Post is deleted", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-
-            }
-        });
     }
 
     private void openReadPostActivity(Post post) {

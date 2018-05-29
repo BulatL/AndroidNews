@@ -30,6 +30,7 @@ import com.example.student.projekat.model.Tag;
 import com.example.student.projekat.model.User;
 import com.example.student.projekat.service.PostService;
 import com.example.student.projekat.service.ServiceUtils;
+import com.example.student.projekat.service.TagService;
 import com.example.student.projekat.util.PostsDateComparator;
 import com.example.student.projekat.util.PostsPopularityComparator;
 import com.google.gson.Gson;
@@ -37,6 +38,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -52,6 +54,7 @@ public class PostActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private ListView postsListView;
     private Post post;
+    private PostService postService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +100,7 @@ public class PostActivity extends AppCompatActivity {
                 });
 
         postsListView = findViewById(R.id.listOfPosts);
-        PostService postService = ServiceUtils.postService;
+        postService = ServiceUtils.postService;
 
         Call call = postService.getPosts();
 
@@ -105,9 +108,9 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
                 posts = response.body();
-                postsAdapter = new PostsAdapter(getApplicationContext(), posts);
-
+                postsAdapter = new PostsAdapter(getApplicationContext(),posts);
                 postsListView.setAdapter(postsAdapter);
+                //sortPosts(getApplicationContext(),posts);
 
             }
 
@@ -116,7 +119,28 @@ public class PostActivity extends AppCompatActivity {
 
             }
         });
+        postsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                post = posts.get(i);
+
+                Call<Post> call = postService.getPost(post.getId());
+
+                call.enqueue(new Callback<Post>() {
+                    @Override
+                    public void onResponse(Call<Post> call, Response<Post> response) {
+                        post = response.body();
+                        setTagsInPost();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Post> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
         /*postsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -171,7 +195,6 @@ public class PostActivity extends AppCompatActivity {
             userName.setVisibility(View.VISIBLE);
             name.setVisibility(View.VISIBLE);
         }
-
     }
 
     @Override
@@ -236,20 +259,98 @@ public class PostActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        /*String sortiranje_po = sharedPreferences.getString("sortiranje_objava_objava", "Datumu");
+        sortPosts(getApplicationContext(), posts);
+    }
 
-        if (sortiranje_po.equals("Datumu")) {
-            Collections.sort(posts, new PostsDateComparator());
-            postsAdapter.notifyDataSetChanged();
-        } else {
-            Collections.sort(posts, new PostsPopularityComparator());
-            postsAdapter.notifyDataSetChanged();
-        }*/
+    public void sortPosts(Context context, List<Post> posts){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String sort_post = preferences.getString("sort_post", null);
+
+        if(sort_post != null) {
+            if (sort_post.equals("0")) {
+            /*Collections.sort(posts, new PostsDateComparator());
+            postsAdapter.notifyDataSetChanged();*/
+                System.out.println("sortiranje objava po datumu");
+                sortDate(context,posts);
+            } else {
+            /*Collections.sort(posts, new PostsPopularityComparator());
+            postsAdapter.notifyDataSetChanged();*/
+                System.out.println("Sortiranje objava po popularnosti");
+                sortByPopularity(context,posts);
+            }
+        }
+    }
+
+    public void sortDate(Context context, List<Post> posts){
+        Collections.sort(posts, new Comparator<Post>() {
+            @Override
+            public int compare(Post post, Post t1) {
+                return t1.getDate().compareTo(post.getDate());
+            }
+        });
+
+        postsAdapter = new PostsAdapter(context, posts);
+        postsListView = findViewById(R.id.listOfPosts);
+        postsListView.setAdapter(postsAdapter);
+        //postsAdapter.notifyDataSetChanged();
+    }
+    public void sortByPopularity(Context context, List<Post> posts){
+
+        Collections.sort(posts, new Comparator<Post>() {
+            @Override
+            public int compare(Post post, Post t1) {
+                int first;
+                int second ;
+                first = post.getLikes() - post.getDislikes();
+                second = t1.getLikes() - t1.getDislikes();
+                return Integer.valueOf(second).compareTo(first);
+            }
+        });
+        for (Post p: posts) {
+            System.out.println("sortiran po popularnosti ");
+            System.out.println(p.getTitle() + " popularnost " + (p.getLikes()-p.getDislikes()));
+        }
+
+        postsAdapter = new PostsAdapter(context, posts);
+        postsListView = findViewById(R.id.listOfPosts);
+        postsListView.setAdapter(postsAdapter);
+        //postsAdapter.notifyDataSetChanged();
+
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
+    }
+
+    private void openReadPostActivity(Post post) {
+        Intent intent = new Intent(getApplicationContext(), ReadPostActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("post", post);
+        System.out.println("startuje read activity");
+        startActivity(intent);
+    }
+
+    private void setTagsInPost(){
+        TagService tagService = ServiceUtils.tagService;
+        Call callT = tagService.getTagsByPost(post.getId());
+        callT.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                List<Tag> tags = (List<Tag>)response.body();
+                post.setTags(tags);
+                for (Tag t:tags) {
+                    System.out.println("------------------ tagovi \n"+t.getName());
+                }
+                System.out.println("setovao je tagove");
+                openReadPostActivity(post);
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
     }
 
 }

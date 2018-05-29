@@ -36,7 +36,7 @@
             android:contentDescription="@null"
             android:layout_toRightOf="@id/post_likes"
             android:layout_below="@id/post_image"
-            android:src="@drawable/ic_thumb_up_green_24dp" />
+            android:src="@drawable/ic_thumb_up_dark_green_24dp" />
 
         <ImageView
             android:id="@+id/image_dislikes"
@@ -47,7 +47,7 @@
             android:layout_marginRight="5dp"
             android:contentDescription="@null"
             android:layout_below="@id/post_image"
-            android:src="@drawable/ic_thumb_down_red_24dp" />
+            android:src="@drawable/ic_thumb_down_dark_red_24dp" />
 
         <TextView
             android:id="@+id/post_dislikes"
@@ -85,16 +85,6 @@
                 android:textColor="#000"
                 android:gravity="center"
                 />
-
-            <ImageButton
-                android:id="@+id/btnDeletePost"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_clear_red_24dp"
-                android:background="@color/white"
-                android:onClick="btnDeletePost"
-                android:gravity="end"
-                android:layout_alignParentRight="true"/>
 
         </RelativeLayout>
         <TextView

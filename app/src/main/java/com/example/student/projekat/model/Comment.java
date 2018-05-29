@@ -1,8 +1,9 @@
 package com.example.student.projekat.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Comment {
+public class Comment implements Serializable{
     private int id;
     private String title;
     private String description;
@@ -11,6 +12,8 @@ public class Comment {
     private Post post;
     private int likes;
     private int dislikes;
+
+    public Comment(){}
 
     public Comment(int id, String title, String description, User author, Date date, Post post, int likes, int dislikes) {
         this.id = id;
@@ -53,5 +56,39 @@ public class Comment {
 
     public int getDislikes() {
         return dislikes;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public void setDescription(String description) {
+
+        this.description = description;
     }
 }

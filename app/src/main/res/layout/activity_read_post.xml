@@ -47,6 +47,7 @@
 
 
                 <ScrollView
+                    android:id="@+id/scrollView_read_post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
@@ -54,143 +55,180 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:gravity="center"
+                                    android:id="@+id/titleRead"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="32dp"
+                                    android:layout_toLeftOf="@id/btnDeletePost"
+                                    />
+                                <ImageButton
+                                    android:id="@+id/btnDeletePost"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:src="@drawable/ic_clear_red_24dp"
+                                    android:background="@color/white"
+                                    android:onClick="btnDeletePost"
+                                    android:gravity="end"
+                                    android:layout_alignParentRight="true"/>
+
+                            </RelativeLayout>
 
 
-                <TextView
-                    android:gravity="center"
-                    android:id="@+id/titleRead"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="32dp"
-                    />
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/AuthorRead"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20dp"
-                        android:textStyle="bold"
-                        />
+                                <TextView
+                                    android:id="@+id/AuthorRead"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="20dp"
+                                    android:textStyle="bold"
+                                    />
 
-                    <TextView
-                        android:id="@+id/dateTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_toRightOf="@+id/AuthorRead"
-                        />
-                </RelativeLayout>
+                                <TextView
+                                    android:id="@+id/dateTime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="15dp"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_toRightOf="@+id/AuthorRead"
+                                    />
+                            </RelativeLayout>
 
 
 
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="100dp"
-                    android:layout_marginTop="10dp"
-                    />
+                            <ImageView
+                                android:id="@+id/imageView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="100dp"
+                                android:layout_marginTop="10dp"
+                                />
 
 
-                <TextView
-                    android:id="@+id/description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    />
+                            <TextView
+                                android:id="@+id/description"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp">
-                    <TextView
-                        android:id="@+id/tagRead"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        />
-                    <TextView
-                        android:id="@+id/likes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="2000"
-                        android:layout_marginRight="5dp"
-                        android:layout_toLeftOf="@id/image_likes"
-                        />
-                    <ImageButton
-                        android:id="@+id/image_likes"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:contentDescription="@null"
-                        android:layout_marginTop="10dp"
-                        android:layout_toLeftOf="@id/image_dislikes"
-                        android:layout_marginRight="5dp"
-                        android:background="@color/white"
-                        android:src="@drawable/ic_thumb_up_green_24dp"
-                        android:onClick="btnLikePost"/>
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp">
+                                <TextView
+                                    android:id="@+id/tagRead"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="15dp"
+                                    />
+                                <TextView
+                                    android:id="@+id/likesPost"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="20dp"
+                                    android:text="2000"
+                                    android:layout_marginRight="5dp"
+                                    android:layout_toLeftOf="@id/image_likes_post"
+                                    />
+                                <ImageButton
+                                    android:id="@+id/image_likes_post"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:contentDescription="@null"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_toLeftOf="@id/image_dislikes_post"
+                                    android:layout_marginRight="5dp"
+                                    android:background="@color/white"
+                                    android:src="@drawable/ic_thumb_up_dark_green_24dp"
+                                    android:onClick="btnLikePost"/>
 
-                    <ImageButton
-                        android:id="@+id/image_dislikes"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:contentDescription="@null"
-                        android:layout_marginTop="10dp"
-                        android:layout_toLeftOf="@id/disLikes"
-                        android:layout_marginRight="5dp"
-                        android:background="@color/white"
-                        android:src="@drawable/ic_thumb_down_red_24dp"
-                        android:onClick="btnDislikePost"/>
+                                <ImageButton
+                                    android:id="@+id/image_dislikes_post"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:contentDescription="@null"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_toLeftOf="@id/disLikesPost"
+                                    android:layout_marginRight="5dp"
+                                    android:background="@color/white"
+                                    android:src="@drawable/ic_thumb_down_dark_red_24dp"
+                                    android:onClick="btnDislikePost"/>
 
-                    <TextView
-                        android:id="@+id/disLikes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="155"
-                        android:layout_alignParentRight="true"
-                        />
+                                <TextView
+                                    android:id="@+id/disLikesPost"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="20dp"
+                                    android:text="155"
+                                    android:layout_alignParentRight="true"
+                                    />
 
-                </RelativeLayout>
+                            </RelativeLayout>
 
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp">
+
+                            <EditText
+                                android:id="@+id/titleComments"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:hint="Enter comment title here"
+                                android:layout_toLeftOf="@id/addComment"
+                                android:layout_alignParentLeft="true" />
+
+                            <EditText
+                                android:id="@+id/EnterComments"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:hint="Enter comment here"
+                                android:layout_toLeftOf="@id/addComment"
+                                android:layout_below="@id/titleComments"
+                                android:layout_alignParentLeft="true" />
+                            <ImageButton
+                                android:id="@+id/addComment"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:background="@color/white"
+                                android:src="@drawable/ic_add_green_24dp"
+                                android:gravity="end"
+                                android:onClick="btnAddComment"
+                                android:layout_alignParentRight="true"/>
+                        </RelativeLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/listViewContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            >
+
+                            <com.example.student.projekat.util.NonScrollListView
+                                android:id="@+id/listOfComments"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:choiceMode="singleChoice"/>
+
+                        </LinearLayout>
                     </LinearLayout>
                 </ScrollView>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp">
-
-                    <EditText
-                        android:id="@+id/EnterComments"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:hint="Enter comment here"/>
-                    <ImageButton
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:background="@color/white"
-                        android:src="@drawable/ic_add_green_24dp"
-                        android:layout_alignParentRight="true"/>
-                </RelativeLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/listViewContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    >
-
-                    <ListView
-                        android:id="@+id/listOfComments"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-                </LinearLayout>
-
 
             </LinearLayout>
 
