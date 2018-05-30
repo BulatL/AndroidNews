@@ -1,28 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient">
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/username"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-217dp"
+        android:src="@drawable/logo" />
 
     <EditText
         android:id="@+id/username"
-        android:layout_width="wrap_content"
+        android:layout_width="157dp"
         android:layout_height="wrap_content"
-        android:hint="enter username"/>
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="217dp"
+        android:textColor="@color/white"
+        android:drawableLeft="@drawable/ic_adb_black_24dp"
+        android:hint="Username" />
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="wrap_content"
+        android:layout_width="156dp"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:hint="enter password"/>
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="228dp"
+        android:hint="Password"
+        android:textColor="@color/white"
+        android:drawableLeft="@drawable/ic_lock_black_24dp"
+        android:inputType="textPassword" />
 
     <Button
         android:id="@+id/loginBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="135dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="151dp"
+        android:background="#af1f30"
         android:onClick="btnLogin"
-        android:text="Login"/>
+        android:text="Login"
+        android:textColor="@color/white" />
 
 
-</LinearLayout>
+</RelativeLayout>
