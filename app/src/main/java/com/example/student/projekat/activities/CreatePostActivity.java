@@ -338,6 +338,7 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
     @Override
     protected void onPause() {
         super.onPause();
+        locationManager.removeUpdates(this);
     }
 
     @Override
