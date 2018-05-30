@@ -103,8 +103,15 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="15dp"
                                     android:layout_marginTop="5dp"
-                                    android:layout_toRightOf="@+id/AuthorRead"
-                                    />
+                                    android:layout_toRightOf="@id/AuthorRead" />
+                                <TextView
+                                    android:id="@+id/locationReadPost"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="15dp"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_toRightOf="@id/dateTime" />
                             </RelativeLayout>
 
 

@@ -15,25 +15,29 @@ public class Post implements Serializable {
     private Bitmap photo;
     private User author;
     private Date date;
-    private Location location;
+    private double latitude;
+    private double longitude;
     private List<Tag> tags;
     private List<Comment> comments;
     private int likes;
     private int dislikes;
 
-    public Post(int id, String title, String description, Bitmap photo, User author, Date date, Location location, List<Tag> tags, List<Comment> comments, int likes, int dislikes) {
+    public Post(int id, String title, String description, Bitmap photo, User author, Date date, double latitude,double longitude,List<Tag> tags, List<Comment> comments, int likes, int dislikes) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.photo = photo;
         this.author = author;
         this.date = date;
-        this.location = location;
+        this.latitude = latitude;
+        this.latitude = latitude;
         this.tags = tags;
         this.comments = comments;
         this.likes = likes;
         this.dislikes = dislikes;
     }
+
+
     public Post(){
     }
 
@@ -85,12 +89,29 @@ public class Post implements Serializable {
         this.date = date;
     }
 
-    public Location getLocation() {
+    /*public Location getLocation() {
         return location;
     }
 
     public void setLocation(Location location) {
         this.location = location;
+    }*/
+
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public List<Tag> getTags() {

@@ -1,11 +1,6 @@
 package com.example.student.projekat.adapters;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.student.projekat.R;
-import com.example.student.projekat.activities.LoginActivity;
 import com.example.student.projekat.activities.ReadPostActivity;
 import com.example.student.projekat.model.Comment;
-import com.example.student.projekat.model.Post;
 import com.example.student.projekat.service.CommentService;
 import com.example.student.projekat.service.ServiceUtils;
 
@@ -35,8 +28,6 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
     private Context context;
     private CommentService commentService;
     private Comment comment;
-    private TextView likeView;
-    private TextView disLikesView;
     private TextView dislikes;
     private TextView likes;
     private ImageButton btnLike;
@@ -55,7 +46,7 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
         }
         Context context = parent.getContext();
 
-        comment = comments.get(position);
+        comment = getItem(position);
 
         ImageView image = convertView.findViewById(R.id.comment_image);
         TextView title = convertView.findViewById(R.id.comment_title);
@@ -63,15 +54,15 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
         TextView author = convertView.findViewById(R.id.comment_author);
         likes = convertView.findViewById(R.id.likes_comment);
         dislikes = convertView.findViewById(R.id.disLikes_comment);
-        ImageButton btnDele = convertView.findViewById(R.id.btnDeleteComment);
+        ImageButton btnDelete = convertView.findViewById(R.id.btnDeleteComment);
         btnLike = convertView.findViewById(R.id.image_likes_comment);
         btnDislike = convertView.findViewById(R.id.image_dislikes_comment);
 
         Boolean provera = ReadPostActivity.checkUserAndAuthro(comment.getAuthor().getUsername());
         if(provera== true){
-            btnDele.setVisibility(View.VISIBLE);
+            btnDelete.setVisibility(View.VISIBLE);
         }else{
-            btnDele.setVisibility(View.GONE);
+            btnDelete.setVisibility(View.GONE);
         }
 
         btnLike.setOnClickListener(new View.OnClickListener(){
@@ -88,9 +79,10 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
             }
         });
 
-        btnDele.setOnClickListener(new View.OnClickListener() {
+        btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 btnDeleteComment(comment.getId());
             }
         });
@@ -111,10 +103,12 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
     public void btnDeleteComment(int commentId){
         commentService = ServiceUtils.commentService;
         Call<Void> call = commentService.deleteComment(commentId);
+        System.out.println("prosledjeni id " + commentId);
+        System.out.println("print pre call poziva ");
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Toast.makeText(getContext(), "Comment is deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Comment is deleted", Toast.LENGTH_SHORT).show();
                 ReadPostActivity.getComments(comment);
             }
 
@@ -146,6 +140,14 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
 
                     }
                 });
+                Toast.makeText(context, "Liked comment", Toast.LENGTH_SHORT).show();
+                System.out.println("da li postoji btnDislike? " + btnDislike);
+                if (!btnDislike.isEnabled()) {
+                    btnDislike.setImageResource(R.drawable.ic_thumb_down_dark_red_24dp);
+                }
+                btnLike.setEnabled(false);
+                btnDislike.setEnabled(true);
+                btnLike.setImageResource(R.drawable.ic_thumb_up_light_green_24dp);
 
             } else {
                 Toast.makeText(context, "Already liked comment", Toast.LENGTH_SHORT).show();
@@ -153,14 +155,6 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
         }else{
             Toast.makeText(context, "Can't liked your comment", Toast.LENGTH_SHORT).show();
         }
-        Toast.makeText(context, "Liked comment", Toast.LENGTH_SHORT).show();
-        if (!btnDislike.isEnabled()) {
-            btnDislike.setImageResource(R.drawable.ic_thumb_down_dark_red_24dp);
-        }
-        btnLike.setEnabled(false);
-        btnDislike.setEnabled(true);
-        btnLike.setImageResource(R.drawable.ic_thumb_up_light_green_24dp);
-
         this.notifyDataSetChanged();
     }
 
@@ -185,6 +179,13 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
 
                     }
                 });
+                if (!btnLike.isEnabled()) {
+                    btnLike.setImageResource(R.drawable.ic_thumb_up_dark_green_24dp);
+                }
+                btnDislike.setEnabled(false);
+                btnLike.setEnabled(true);
+                btnDislike.setImageResource(R.drawable.ic_thumb_down_light_red_24dp);
+
 
             }else{
                 Toast.makeText(context, "Already disliked comment", Toast.LENGTH_SHORT).show();
@@ -192,12 +193,6 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
         }else{
             Toast.makeText(context, "Can't dislike your comment", Toast.LENGTH_SHORT).show();
         }
-        if (!btnLike.isEnabled()) {
-            btnLike.setImageResource(R.drawable.ic_thumb_up_dark_green_24dp);
-        }
-        btnDislike.setEnabled(false);
-        btnLike.setEnabled(true);
-        btnDislike.setImageResource(R.drawable.ic_thumb_down_light_red_24dp);
 
         this.notifyDataSetChanged();
     }

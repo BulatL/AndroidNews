@@ -61,6 +61,30 @@
 
 
             <RelativeLayout
+                android:id="@+id/locationLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/getLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Get location"/>
+
+                <TextView
+                    android:id="@+id/textViewLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_toRightOf="@id/getLocation"
+                    android:layout_alignParentRight="true"
+                    android:textStyle="bold"
+                    android:textSize="19dp"
+                    android:textAlignment="center"
+                    android:tooltipText="nesto"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -86,11 +110,11 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_marginTop="30dp"
                     android:id="@+id/previewImage"
-                    android:layout_gravity="center"
                     android:layout_width="200dp"
-                    android:layout_height="150dp" />
+                    android:layout_height="165dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="30dp" />
             </LinearLayout>
 
         </LinearLayout>

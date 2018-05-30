@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -19,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -39,6 +42,7 @@ import com.example.student.projekat.service.ServiceUtils;
 import com.example.student.projekat.util.CommentsDateComparator;
 import com.example.student.projekat.util.CommentsPopularityComparator;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,6 +50,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,6 +64,7 @@ public class ReadPostActivity extends AppCompatActivity {
     private TextView tag;
     private TextView like;
     private TextView disLikes;
+    private TextView location;
     private Bitmap myBitmap;
     private DrawerLayout mDrawerLayout;
     private static List<Comment> comments = new ArrayList<>();
@@ -69,6 +75,7 @@ public class ReadPostActivity extends AppCompatActivity {
     private static Post post = new Post();
     private PostService postService;
     private static Context mContext;
+    private CommentService commentService;
 
 
     @Override
@@ -151,6 +158,9 @@ public class ReadPostActivity extends AppCompatActivity {
         disLikes = findViewById(R.id.disLikesPost);
         disLikes.setText(String.valueOf(post.getDislikes()));
 
+        location = findViewById(R.id.locationReadPost);
+        getAddress(post.getLatitude(), post.getLongitude());
+
         myBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.keyboard);
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setImageBitmap(myBitmap);
@@ -203,19 +213,6 @@ public class ReadPostActivity extends AppCompatActivity {
             }
         }
 
-
-        /*User author = new User(1, "A", null, "admin", "admin", Collections.<Post>emptyList(), Collections.<Comment>emptyList());
-        Bitmap postImage = BitmapFactory.decodeResource(getResources(), R.drawable.keyboard);
-
-        comments.addAll(Arrays.asList(
-                new Comment(1, "vrh komentar", "jako mi se svidja ovaj post", author, new Date(1525199174000L), post, 16,
-                        21),
-                new Comment(2, "vrh komentar2", "jako mi se svidja ovaj post", author, new Date(1525199174000L), post, 15,
-                        1),
-                new Comment(3, "vrh komentar3", "jako mi se svidja ovaj post", author, new Date(1525199174000L), post, 15,
-                        1)
-        ));*/
-
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
     }
@@ -227,7 +224,8 @@ public class ReadPostActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(LoginActivity.MyPreferences, Context.MODE_PRIVATE);
         String loggedInUser= sharedPreferences.getString(LoginActivity.Username, "");
-        if(loggedInUser.equals(post.getAuthor().getUsername())){
+        System.out.println(loggedInUser +" ulogovani, autor " + post.getAuthor().getUsername());
+        if(!loggedInUser.equals(post.getAuthor().getUsername())){
             if (btnLikePost.isEnabled()) {
                 post.setLikes(post.getLikes() + 1);
                 postService = ServiceUtils.postService;
@@ -273,7 +271,7 @@ public class ReadPostActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(LoginActivity.MyPreferences, Context.MODE_PRIVATE);
         String loggedInUser= sharedPreferences.getString(LoginActivity.Username, "");
-        if(loggedInUser.equals(post.getAuthor().getUsername())){
+        if(!loggedInUser.equals(post.getAuthor().getUsername())){
             if(btnDislikePost.isEnabled()) {
                 post.setDislikes(post.getDislikes() + 1);
                 postService = ServiceUtils.postService;
@@ -392,6 +390,14 @@ public class ReadPostActivity extends AppCompatActivity {
                 Intent i2 = new Intent(ReadPostActivity.this, SettingsActivity.class);
                 startActivity(i2);
                 return true;
+            case R.id.logout:
+                SharedPreferences sharedPreferences = getSharedPreferences(LoginActivity.MyPreferences, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.clear();
+                editor.commit();
+                Intent logoutIntent = new Intent(this, LoginActivity.class);
+                startActivity(logoutIntent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -488,5 +494,22 @@ public class ReadPostActivity extends AppCompatActivity {
         if(authro.equals(loggedInUserName)) return true;
         else return false;
     }
+
+    public void getAddress(double latitude,double longitude){
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            String city = addresses.get(0).getLocality();
+            String country = addresses.get(0).getCountryName();
+            location.setText(city + "," + country);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 }
