@@ -26,6 +26,12 @@ public interface PostService {
     @GET("posts/{id}")
     Call<Post> getPost(@Path("id") int id);
 
+    @GET("posts/sort/bylikes")
+    Call<List<Post>> getPostSortByLikes();
+
+    @GET("posts/sort/bycomments")
+    Call<List<Post>> getPostSortByComments();
+
     @GET("posts/author/{authorName}")
     Call<List<Post>> getPostsByAuthor(@Path("authorName") String authorName);
 

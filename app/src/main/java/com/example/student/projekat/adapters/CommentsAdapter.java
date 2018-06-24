@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,31 +69,35 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
         final ImageButton btnDislike = convertView.findViewById(R.id.image_dislikes_comment);
         final ImageButton btnEdit = convertView.findViewById(R.id.btnEditComment);
 
-        if(loggedInUser==null){
+        if (loggedInUser == null) {
             btnLike.setEnabled(false);
             btnDislike.setEnabled(false);
         }
+        else{
+            btnLike.setEnabled(true);
+            btnDislike.setEnabled(true);
+        }
 
-        String provera = ReadPostActivity.checkUserAndAuthro(comment.getAuthor().getUsername());
-        if(provera.equals("same")){
+        String provera = ReadPostActivity.checkUserAndAuthorEditDelete(comment.getAuthor().getUsername());
+        if (provera.equals("same")) {
             btnEdit.setVisibility(View.VISIBLE);
             btnDelete.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             btnEdit.setVisibility(View.GONE);
             btnDelete.setVisibility(View.GONE);
         }
 
-        btnLike.setOnClickListener(new View.OnClickListener(){
+        btnLike.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                btnLikeComment(view, comment,btnLike, btnDislike);
+            public void onClick(View view) {
+                btnLikeComment(view, comment, btnLike, btnDislike);
             }
         });
 
-        btnDislike.setOnClickListener(new View.OnClickListener(){
+        btnDislike.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                btnDislikeComment(view, comment,btnLike, btnDislike);
+            public void onClick(View view) {
+                btnDislikeComment(view, comment, btnLike, btnDislike);
             }
         });
 
@@ -119,21 +120,21 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
         author.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    Intent i = new Intent(context, UserInfoActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    i.putExtra("loggedInUser", loggedInUser);
-                    i.putExtra("userInfo", comment.getAuthor());
-                    context.startActivity(i);
+                Intent i = new Intent(context, UserInfoActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.putExtra("loggedInUser", loggedInUser);
+                i.putExtra("userInfo", comment.getAuthor());
+                context.startActivity(i);
             }
         });
 
         Bitmap myBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.android_robot);
-        /*String uri = Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +R.drawable.android_robot).toString();
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 8;
-        Bitmap myBitmap = BitmapFactory.decodeFile(uri ,options);*/
         ImageView imageView = (ImageView) convertView.findViewById(R.id.comment_image);
-        imageView.setImageBitmap(myBitmap);
-
+        if (comment.getAuthor().getPhoto() != null) {
+            System.out.println("author photo");
+            imageView.setImageBitmap(comment.getAuthor().getPhoto());
+        } else{
+            imageView.setImageBitmap(myBitmap);
+        }
         title.setText(comment.getTitle());
         desc.setText(comment.getDescription());
         author.setText("by " +comment.getAuthor().getUsername());
@@ -162,9 +163,9 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
     }
 
     public void btnLikeComment(View view, final Comment commentt, final ImageButton btnLike, final ImageButton btnDislike) {
-
-        String provera = ReadPostActivity.checkUserAndAuthro(commentt.getAuthor().getUsername());
+        String provera = ReadPostActivity.checkUserAndAuthorLikeDislike(commentt.getAuthor().getUsername());
         if(provera.equals("")){
+            System.out.println("btnlike enabled? " +btnLike.isEnabled());
             if (btnLike.isEnabled()) {
                 commentt.setLikes(commentt.getLikes() + 1);
                 likes.setText(String.valueOf(commentt.getLikes()));
@@ -186,6 +187,8 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
                     btnDislike.setImageResource(R.drawable.ic_thumb_down_dark_red_24dp);
                 }
                 btnLike.setEnabled(false);
+                btnLike.setClickable(false);
+                btnDislike.setClickable(true);
                 btnDislike.setEnabled(true);
                 btnLike.setImageResource(R.drawable.ic_thumb_up_light_green_24dp);
 
@@ -200,8 +203,10 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
 
     public void btnDislikeComment(View view, final Comment comment1, final ImageButton btnLike, final ImageButton btnDislike){
 
-        String provera = ReadPostActivity.checkUserAndAuthro(comment1.getAuthor().getUsername());
+        String provera = ReadPostActivity.checkUserAndAuthorLikeDislike(comment1.getAuthor().getUsername());
         if(provera.equals("")){
+
+            System.out.println("btndislike enabled? " +btnDislike.isEnabled());
             if(btnDislike.isEnabled()) {
                 comment1.setDislikes(comment1.getDislikes() + 1);
                 dislikes.setText(String.valueOf(comment1.getDislikes()));
@@ -219,11 +224,16 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
 
                     }
                 });
+                System.out.println(btnLike.isEnabled() + " da li je btnlike enable");
                 if (!btnLike.isEnabled()) {
                     btnLike.setImageResource(R.drawable.ic_thumb_up_dark_green_24dp);
                 }
+                System.out.println("trebalo bi da promeni dislike na disable i svetlocrvenu boju");
                 btnDislike.setEnabled(false);
+                System.out.println(btnDislike.isEnabled() +" btn dislike enabled?");
+                btnDislike.setClickable(false);
                 btnLike.setEnabled(true);
+                btnLike.setClickable(true);
                 btnDislike.setImageResource(R.drawable.ic_thumb_down_light_red_24dp);
 
 

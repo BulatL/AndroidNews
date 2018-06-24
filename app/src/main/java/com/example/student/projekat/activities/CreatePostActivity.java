@@ -182,12 +182,15 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
         Bundle extras = getIntent().getExtras();
         if(extras.getSerializable("post") != null){
             post = (Post) extras.getSerializable("post");
+            loadPost();
             title.setText(post.getTitle());
             description.setText(post.getDescription());
             for (Tag t:post.getTags()) {
                 tags.append("#"+t.getName() + " ");
             }
             addOrEdit = "edit";
+            ImageView previewImage = findViewById(R.id.previewImage);
+            previewImage.setImageBitmap(post.getPhoto());
         }
 
         location_text = findViewById(R.id.textViewLocation);
@@ -259,6 +262,8 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
             menu.findItem(R.id.loginMenu).setVisible(false);
             if(loggedInUser.getRole().equals("ADMIN") || loggedInUser.getRole().equals("PUBLISHER")){
                 menu.findItem(R.id.addPostMenu).setVisible(true);
+            }else{
+                menu.findItem(R.id.addPostMenu).setVisible(false);
             }
         }else{
             menu.findItem(R.id.logoutMenu).setVisible(false);
@@ -420,6 +425,7 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
 
                 post.setTitle(title);
                 post.setDescription(description);
+                post.setPhoto(bitmap);
                 PostService postService = ServiceUtils.postService;
                 Call<Post> call = postService.updatePost(post, post.getId());
                 call.enqueue(new Callback<Post>() {
@@ -427,11 +433,8 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
                     public void onResponse(Call<Post> call, Response<Post> response) {
                         Toast.makeText(CreatePostActivity.this, "u updated post successfully",
                                 Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), ReadPostActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("loggedInUser", loggedInUser);
-                        intent.putExtra("post", post);
-                        startActivity(intent);
+                        post=response.body();
+                        openReadPostActivity(post);
                     }
 
                     @Override
@@ -482,8 +485,9 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
         call.enqueue(new Callback<Post>() {
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
+                post=response.body();
                 System.out.println("zavrsio i ovo");
-                openReadPostActivity();
+                openReadPostActivity(post);
             }
 
             @Override
@@ -492,13 +496,51 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
         });
     }
 
-    public void openReadPostActivity(){
+    public void openReadPostActivity(Post post){
         post.setPhoto(null);
         System.out.println("usao u openreadpostactivity");
-        Intent intent = new Intent(getApplicationContext(), ReadPostActivity.class);
+        Intent intent = new Intent(CreatePostActivity.this, ReadPostActivity.class);
         intent.putExtra("loggedInUser", loggedInUser);
         intent.putExtra("post", post);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    public void loadPost(){
+        PostService postService2 =ServiceUtils.postService;
+        Call<Post> call = postService2.getPost(post.getId());
+
+        call.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                post = response.body();
+                ImageView imageView = findViewById(R.id.previewImage);
+                System.out.println(imageView);
+                imageView.setImageBitmap(post.getPhoto());
+                setTagsInPost();
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void setTagsInPost(){
+        TagService tagService = ServiceUtils.tagService;
+        Call callT = tagService.getTagsByPost(post.getId());
+        callT.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                List<Tag> tags = (List<Tag>)response.body();
+                post.setTags(tags);
+            }
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
     }
 
     @Override

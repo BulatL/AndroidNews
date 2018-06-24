@@ -62,11 +62,22 @@
                         android:layout_marginTop="10dp"/>
 
                     <ImageButton
+                        android:id="@+id/uploadImageInfo"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/white"
+                        android:src="@drawable/ic_insert_photo_black_24dp"
+                        android:layout_marginLeft="50dp"
+                        android:layout_toRightOf="@id/userImage"
+                        android:onClick="btnUploadImageInfo"/>
+
+                    <ImageButton
                         android:id="@+id/editUser"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_marginLeft="90dp"
-                        android:layout_toRightOf="@+id/userImage"
+                        android:layout_toRightOf="@id/uploadImageInfo"
+                        android:layout_marginTop="5dp"
                         android:background="@color/white"
                         android:src="@drawable/ic_edit_green_24dp" />
 
@@ -76,6 +87,7 @@
                         android:layout_height="40dp"
                         android:layout_alignParentRight="true"
                         android:layout_toRightOf="@id/editUser"
+                        android:layout_marginTop="5dp"
                         android:background="@color/white"
                         android:src="@drawable/ic_delete_red_24dp"
                         android:onClick="btnDeleteUser"/>

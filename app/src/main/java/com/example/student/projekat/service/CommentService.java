@@ -25,6 +25,9 @@ public interface CommentService {
     @GET("comments/post/{id}")
     Call<List<Comment>> getCommentsByPost(@Path("id") int id);
 
+    @GET("comments/post/sort/bylikes/{id}")
+    Call<List<Comment>> getCommentsSortByLikes(@Path("id") int id);
+
     @GET("comments/author/{userName}")
     Call<List<Comment>> getCommentsByAuthor(@Path("userName") String username);
 

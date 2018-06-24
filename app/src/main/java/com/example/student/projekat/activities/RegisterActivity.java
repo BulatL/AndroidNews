@@ -106,36 +106,42 @@ public class RegisterActivity extends Activity {
     }
 
     public void register(){
-        /*ByteArrayOutputStream out = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,0,out);
-        Bitmap compressedBitmap = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));*/
         user.setUsername(username);
         user.setName(name);
         user.setPassword(password);
         user.setPhoto(bitmap);
         user.setRole("COMMENTATOR");
+        System.out.println(user.getPhoto() +" user.getPhoto()");
 
         System.out.println(bitmap.getByteCount());
 
-        userService = ServiceUtils.userService;
-        Call call = userService.addUser(user);
-        call.enqueue(new Callback() {
+        UserService userService = ServiceUtils.userService;
+        Call<User> call = userService.addUser(user);
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call call, Response response) {
+            public void onResponse(Call<User> call, Response<User> response) {
                 Toast.makeText(RegisterActivity.this, "Successfully register",
                         Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(RegisterActivity.this, PostActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("loggedInUser", user);
-                startActivity(intent);
-                finish();
+                user=response.body();
+                System.out.println(user + " ovaj user valja?");
+                openPostActivity(user);
             }
 
             @Override
-            public void onFailure(Call call, Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
 
             }
         });
+    }
+
+    public void openPostActivity(User user){
+        System.out.println(user +" user");
+        System.out.println(user.getPhoto()+ " photo");
+        user.setPhoto(null);
+        Intent intent = new Intent(RegisterActivity.this, PostActivity.class);
+        intent.putExtra("loggedInUser", user);
+        startActivity(intent);
+        finish();
     }
 
     private boolean validate(String username, String name, String password){
@@ -167,6 +173,7 @@ public class RegisterActivity extends Activity {
 
                 System.out.println(bitmap);
                 image.setImageBitmap(bitmap);
+                user.setPhoto(bitmap);
 
             }catch (FileNotFoundException e){
                 e.printStackTrace();

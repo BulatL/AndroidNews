@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,9 +29,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.student.projekat.R;
+import com.example.student.projekat.adapters.CommentsAdapter;
 import com.example.student.projekat.adapters.PostsAdapter;
+import com.example.student.projekat.model.Comment;
 import com.example.student.projekat.model.Post;
 import com.example.student.projekat.model.User;
+import com.example.student.projekat.service.CommentService;
 import com.example.student.projekat.service.PostService;
 import com.example.student.projekat.service.ServiceUtils;
 import com.example.student.projekat.util.SearchDialog;
@@ -57,6 +61,7 @@ public class PostActivity extends AppCompatActivity  implements SearchDialog.Sea
     private PostService postService;
 
     private List<Post> posts= new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
     private Post post;
     private User loggedInUser;
 
@@ -203,8 +208,6 @@ public class PostActivity extends AppCompatActivity  implements SearchDialog.Sea
                 });
             }
         });
-
-        System.out.println("da li je loggedInUser null " + loggedInUser);
         if(loggedInUser!= null){
             View headerLayout = navigationView.getHeaderView(0);
             TextView userNameHeader = headerLayout.findViewById(R.id.username_header);
@@ -284,6 +287,8 @@ public class PostActivity extends AppCompatActivity  implements SearchDialog.Sea
             menu.findItem(R.id.loginMenu).setVisible(false);
             if(loggedInUser.getRole().equals("ADMIN") || loggedInUser.getRole().equals("PUBLISHER")){
                 menu.findItem(R.id.addPostMenu).setVisible(true);
+            }else{
+                menu.findItem(R.id.addPostMenu).setVisible(false);
             }
         }else{
             menu.findItem(R.id.logoutMenu).setVisible(false);
@@ -328,7 +333,6 @@ public class PostActivity extends AppCompatActivity  implements SearchDialog.Sea
         this.searchBy=searchBy;
         this.searchUser=searchUser;
         this.searchTag=searchTag;
-        System.out.println(searchBy + "  " + searchUser + "  " +searchTag);
         if(searchUser==true){
             postService = ServiceUtils.postService;
             Call<List<Post>> call =postService.getPostsByAuthor(searchBy);
@@ -373,24 +377,78 @@ public class PostActivity extends AppCompatActivity  implements SearchDialog.Sea
 
     public void sortPosts(Context context, List<Post> posts){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String sort_post = preferences.getString("sort_post", null);
+        final String sort_post = preferences.getString("sort_post", null);
 
         if(posts== null){
             posts = new ArrayList<>();
         }
         if(sort_post != null) {
+            PostService postService = ServiceUtils.postService;
             if (sort_post.equals("0")) {
-                sortByDate(context,posts);
+                Call<List<Post>> call = postService.getPosts();
+                call.enqueue(new Callback<List<Post>>() {
+                    @Override
+                    public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                        List<Post> sortedPosts = response.body();
+                        for(Post p:sortedPosts){
+                            System.out.println(p.getTitle()+" "+p.getDate() + " date");
+                        }
+                        postsAdapter = new PostsAdapter(getApplicationContext(), sortedPosts);
+                        postsListView = findViewById(R.id.listOfPosts);
+                        postsListView.setAdapter(postsAdapter);
+                        Toast.makeText(PostActivity.this, "Sorted by date",
+                                Toast.LENGTH_SHORT).show();
+                        postsAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Post>> call, Throwable t) {
+
+                    }
+                });
             } else if(sort_post.equals("1")) {
-                sortByPopularity(context,posts);
-            }else if(sort_post.equals("2")){
-                sortByComments(context,posts);
-            }
+                Call<List<Post>> call = postService.getPostSortByLikes();
+                call.enqueue(new Callback<List<Post>>() {
+                    @Override
+                    public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                        List<Post> sortedPosts = response.body();
+                        for(Post p:sortedPosts){
+                            System.out.println(p.getTitle()+" "+(p.getLikes()-p.getDislikes()) + " popularity");
+                        }
+                        Toast.makeText(PostActivity.this, "Sorted by popularity",
+                                Toast.LENGTH_SHORT).show();
+                        sortByPopularity(getApplicationContext(),sortedPosts);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Post>> call, Throwable t) {
+
+                    }
+                });
+            }/*else if(sort_post.equals("2")){
+                Call<List<Post>> call = postService.getPosts();
+                call.enqueue(new Callback<List<Post>>() {
+                    @Override
+                    public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                        List<Post> sortedPosts = response.body();
+                        for(Post p:sortedPosts){
+                            System.out.println(p.getTitle()+" "+ " comments size");
+                        }
+                        sortByComments(getApplicationContext(),sortedPosts);
+                        Toast.makeText(PostActivity.this, "Sorted by comments",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Post>> call, Throwable t) {
+
+                    }
+                });
+            }*/
         }
     }
 
     public void sortByDate(Context context, List<Post> posts){
-        System.out.println(posts);
         Collections.sort(posts, new Comparator<Post>() {
             @Override
             public int compare(Post post, Post t1) {
@@ -419,24 +477,49 @@ public class PostActivity extends AppCompatActivity  implements SearchDialog.Sea
         postsAdapter = new PostsAdapter(context, posts);
         postsListView = findViewById(R.id.listOfPosts);
         postsListView.setAdapter(postsAdapter);
-        //postsAdapter.notifyDataSetChanged();
+        postsAdapter.notifyDataSetChanged();
 
     }
 
     public void sortByComments(Context context, List<Post> posts){
-        Collections.sort(posts, new Comparator<Post>() {
-            @Override
-            public int compare(Post post, Post t1) {
-                int first;
-                int second ;
-                first = post.getComments().size();
-                second = t1.getComments().size();
-                return Integer.valueOf(second).compareTo(first);
-            }
-        });
-        postsAdapter = new PostsAdapter(context, posts);
-        postsListView = findViewById(R.id.listOfPosts);
-        postsListView.setAdapter(postsAdapter);
+        System.out.println("usao u sortbyComments \n");
+            Collections.sort(posts, new Comparator<Post>() {
+                @Override
+                public int compare(Post post, Post t1) {
+                    post=loadComentsByPost(post);
+                    t1 = loadComentsByPost(t1);
+                    int first;
+                    int second;
+                    first = post.getComments().size();
+                    second = t1.getComments().size();
+                    return Integer.valueOf(second).compareTo(first);
+                }
+            });
+            postsAdapter = new PostsAdapter(context, posts);
+            postsListView = findViewById(R.id.listOfPosts);
+            postsListView.setAdapter(postsAdapter);
+            postsAdapter.notifyDataSetChanged();
+    }
+
+    public Post loadComentsByPost(final Post p){
+            CommentService commentService = ServiceUtils.commentService;
+
+            Call call = commentService.getCommentsByPost(p.getId());
+
+            call.enqueue(new Callback<List<Comment>>() {
+                @Override
+                public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+                    comments = response.body();
+                    System.out.println("nasao je comments " + comments.toString());
+                    p.setComments(comments);
+                }
+
+                @Override
+                public void onFailure(Call call, Throwable t) {
+
+                }
+            });
+        return p;
     }
 
     @Override
@@ -453,4 +536,11 @@ public class PostActivity extends AppCompatActivity  implements SearchDialog.Sea
         startActivity(intent);
     }
 
+    public String BitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
 }

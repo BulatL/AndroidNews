@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                         editor.putString(Username, username);
                         editor.commit();
                         String nesto = sharedPreferences.getString(Username, "");
-
+                        user.setPhoto(null);
                         Intent intent = new Intent(LoginActivity.this, PostActivity.class);
                         intent.putExtra("loggedInUser", user);
                         startActivity(intent);

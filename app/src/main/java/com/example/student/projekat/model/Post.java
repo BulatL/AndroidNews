@@ -25,7 +25,7 @@ public class Post implements Serializable {
     private String description;
     @SerializedName("photo")
     @Expose
-    private transient Bitmap photo;
+    private  Bitmap photo;
     @SerializedName("author")
     @Expose
     private User author;

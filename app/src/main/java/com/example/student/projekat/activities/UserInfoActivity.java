@@ -1,6 +1,7 @@
 package com.example.student.projekat.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,7 +10,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -45,6 +48,8 @@ import com.example.student.projekat.util.EditUserDialog;
 import com.example.student.projekat.util.NonScrollListView;
 import com.example.student.projekat.util.SearchDialog;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,11 +72,13 @@ public class UserInfoActivity extends AppCompatActivity implements SearchDialog.
     private CommentService commentService;
 
     private static Context mContext;
-    private User loggedInUser;
-    private User userInfo;
+    private User loggedInUser= new User();
+    private User userInfo= new User();
+    private User currentUser = new User();
     private List<Post> posts = new ArrayList<Post>();
     private List<Comment> comments = new ArrayList<Comment>();
 
+    public static final int PICK_IMAGE = 1;
     private String searchBy;
     private boolean searchUser;
     private boolean searchTag;
@@ -147,25 +154,37 @@ public class UserInfoActivity extends AppCompatActivity implements SearchDialog.
         userImage = findViewById(R.id.userImage);
         userNameTextView = findViewById(R.id.userNameInfo);
         userRoleTextView = findViewById(R.id.userRoleInfo);
+        ImageView uploadImage = findViewById(R.id.uploadImageInfo);
+
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             loggedInUser = (User) extras.getSerializable("loggedInUser");
             userInfo = (User) extras.getSerializable("userInfo");
+            System.out.println(userInfo.getUsername()+" username od userInfo");
+            loadUser(userInfo.getUsername());
+            System.out.println(currentUser.getPhoto() + " ucitao photo?");
 
         }
-
+        System.out.println(userInfo + " userinfo null?");
         if(userInfo!=null)
         {
             userNameTextView.setText("name: " + userInfo.getName());
             userRoleTextView.setText("role: " + userInfo.getRole());
+        System.out.println(userInfo.getPhoto() + "  userInfo.getPhoto() null?");
+        }
 
-            if(userInfo.getPhoto()!= null){
-                myBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.android_robot);
-                userImage.setImageBitmap(myBitmap);
+        if(loggedInUser!= null && userInfo!= null){
+            //System.out.println(loggedInUser.getUsername()"\n");
+            if(!loggedInUser.getUsername().equals(userInfo.getUsername())){
+                System.out.println("nije isti user \n");
+                uploadImage.setVisibility(View.INVISIBLE);
             }else{
-                myBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.android_robot);
-                userImage.setImageBitmap(myBitmap);
+                System.out.println("isti je user \n");
+                uploadImage.setVisibility(View.VISIBLE);
             }
+        }else{
+            System.out.println("nesto je null \n");
+            uploadImage.setVisibility(View.INVISIBLE);
         }
 
         listViewPosts = findViewById(R.id.listViewUserPosts);
@@ -323,6 +342,9 @@ public class UserInfoActivity extends AppCompatActivity implements SearchDialog.
             if(loggedInUser.getRole().equals("ADMIN") || loggedInUser.getRole().equals("PUBLISHER")){
                 menu.findItem(R.id.addPostMenu).setVisible(true);
             }
+            else{
+                menu.findItem(R.id.addPostMenu).setVisible(false);
+            }
         }else{
             menu.findItem(R.id.logoutMenu).setVisible(false);
             menu.findItem(R.id.addPostMenu).setVisible(false);
@@ -333,6 +355,27 @@ public class UserInfoActivity extends AppCompatActivity implements SearchDialog.
     public void openSearchDialog(){
         SearchDialog searchDialog = new SearchDialog();
         searchDialog.show(getSupportFragmentManager(), "search dialog");
+    }
+
+    public void loadUser(String username){
+        System.out.println("usao u loadUser");
+        UserService userService = ServiceUtils.userService;
+        Call<User> call = userService.getUserByUsername(username);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                currentUser = response.body();
+                System.out.println(currentUser.getPhoto() + " image from load");
+                if(currentUser.getPhoto()!= null){
+                    userImage.setImageBitmap(currentUser.getPhoto());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override
@@ -494,6 +537,57 @@ public class UserInfoActivity extends AppCompatActivity implements SearchDialog.
             intent.putExtra("loggedInUser", user);
         }
         startActivity(intent);
+    }
+
+    public void btnUploadImageInfo(View view){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+
+        Toast.makeText(UserInfoActivity.this, "u click on upload image button",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+
+            Uri selectedImage = data.getData();
+            myBitmap = null;
+            try {
+
+                myBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+
+                ImageView previewImage = findViewById(R.id.userImage);
+                previewImage.setImageBitmap(myBitmap);
+
+                savePhoto(myBitmap);
+
+            }catch (FileNotFoundException e){
+                e.printStackTrace();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void savePhoto(Bitmap bitmap){
+        userInfo.setPhoto(bitmap);
+        UserService userService = ServiceUtils.userService;
+        Call<User> call = userService.editUser(userInfo, userInfo.getId());
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                userInfo = response.body();
+                Toast.makeText(UserInfoActivity.this, "Successfully saved photo",  Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override

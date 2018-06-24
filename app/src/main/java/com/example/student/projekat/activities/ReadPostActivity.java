@@ -18,6 +18,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -90,6 +91,7 @@ public class ReadPostActivity extends AppCompatActivity implements SearchDialog.
 
     private static String addCheck = "add";
     private String searchBy;
+    private String stringBitmap;
     private boolean searchUser;
     private boolean searchTag;
 
@@ -168,6 +170,9 @@ public class ReadPostActivity extends AppCompatActivity implements SearchDialog.
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             loggedInUser = (User) extras.getSerializable("loggedInUser");
+            if(extras.getSerializable("stringBitmap1")!=null){
+                stringBitmap =(String) extras.getSerializable("stringBitmap1") + (String) extras.getSerializable("stringBitmap2");
+            }
         }
         if(loggedInUser!=null){
             System.out.println("loggedInUser nije null");
@@ -240,8 +245,7 @@ public class ReadPostActivity extends AppCompatActivity implements SearchDialog.
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 8;
         myBitmap = BitmapFactory.decodeFile(uri ,options);*/
-        ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        imageView.setImageBitmap(myBitmap);
+        loadPost();
 
         titleComment = findViewById(R.id.titleComments);
         descComment = findViewById(R.id.EnterComments);
@@ -461,6 +465,8 @@ public class ReadPostActivity extends AppCompatActivity implements SearchDialog.
         }
 
         Intent intent = new Intent(getApplicationContext(), ReadPostActivity.class);
+        post.setPhoto(null);
+        loggedInUser.setPhoto(null);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("post", post);
         intent.putExtra("loggedInUser", loggedInUser);
@@ -488,6 +494,7 @@ public class ReadPostActivity extends AppCompatActivity implements SearchDialog.
     }
 
     public void btnEditPost(View view){
+        post.setPhoto(null);
         Intent iAdd = new Intent(ReadPostActivity.this, CreatePostActivity.class);
         iAdd.putExtra("post", post);
         iAdd.putExtra("loggedInUser", loggedInUser);
@@ -651,11 +658,15 @@ public class ReadPostActivity extends AppCompatActivity implements SearchDialog.
             if (sort_comments.equals("0")) {
                 /*Collections.sort(comments, new CommentsDateComparator());
                 commentsAdapter.notifyDataSetChanged();*/
-                sortDate();
+                Toast.makeText(ReadPostActivity.this, "Sorted by date",
+                        Toast.LENGTH_SHORT).show();
+                sortDate(getApplicationContext(), comments);
             } else {
                 /*Collections.sort(comments, new CommentsPopularityComparator());
                 commentsAdapter.notifyDataSetChanged();*/
-                sortByPopularity();
+                Toast.makeText(ReadPostActivity.this, "Sorted by popularity",
+                        Toast.LENGTH_SHORT).show();
+                sortByPopularity(getApplicationContext(), comments);
             }
         }
     }
@@ -665,18 +676,21 @@ public class ReadPostActivity extends AppCompatActivity implements SearchDialog.
         super.onRestart();
     }
 
-    public void sortDate(){
+    public void sortDate(Context context, List<Comment> comments){
         Collections.sort(comments, new Comparator<Comment>() {
             @Override
             public int compare(Comment comment, Comment comment1) {
                 return comment1.getDate().compareTo(comment.getDate());
             }
         });
+        CommentsAdapter commentsAdapter = new CommentsAdapter(context, comments, loggedInUser);
+        commentsListView = findViewById(R.id.listOfComments);
+        commentsListView.setAdapter(commentsAdapter);
         commentsAdapter.notifyDataSetChanged();
     }
 
-    public void sortByPopularity(){
-
+    public void sortByPopularity(Context context, List<Comment> comments){
+        System.out.println("Sortbypopularity");
         Collections.sort(comments, new Comparator<Comment>() {
             @Override
             public int compare(Comment comment, Comment comment1) {
@@ -684,9 +698,14 @@ public class ReadPostActivity extends AppCompatActivity implements SearchDialog.
                 int second ;
                 first = comment.getLikes() - comment.getDislikes();
                 second = comment1.getLikes() - comment1.getDislikes();
+                System.out.println("prvi " +comment.getId() + " " + first);
+                System.out.println("drugi " +comment1.getId() + " " + second+"\n");
                 return Integer.valueOf(second).compareTo(first);
             }
         });
+        CommentsAdapter commentsAdapter = new CommentsAdapter(context, comments, loggedInUser);
+        commentsListView = findViewById(R.id.listOfComments);
+        commentsListView.setAdapter(commentsAdapter);
         commentsAdapter.notifyDataSetChanged();
     }
 
@@ -696,10 +715,20 @@ public class ReadPostActivity extends AppCompatActivity implements SearchDialog.
         commentsListView.setAdapter(commentsAdapter);
     }
 
-    public static String checkUserAndAuthro(String authro){
+    public static String checkUserAndAuthorEditDelete(String authro){
         String result= "";
         if(loggedInUser!=null) {
             if (authro.equals(loggedInUser.getUsername()) || loggedInUser.getRole().equals("ADMIN")) {
+                result = "same";
+            }
+        }
+        return result;
+    }
+
+    public static String checkUserAndAuthorLikeDislike(String authro){
+        String result= "";
+        if(loggedInUser!=null) {
+            if (authro.equals(loggedInUser.getUsername())) {
                 result = "same";
             }
         }
@@ -733,6 +762,26 @@ public class ReadPostActivity extends AppCompatActivity implements SearchDialog.
             }
             @Override
             public void onFailure(Call call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void loadPost(){
+        PostService postService2 =ServiceUtils.postService;
+        Call<Post> call = postService2.getPost(post.getId());
+
+        call.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                post = response.body();
+                ImageView imageView = findViewById(R.id.imageView);
+                imageView.setImageBitmap(post.getPhoto());
+                setTagsInPost();
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
 
             }
         });

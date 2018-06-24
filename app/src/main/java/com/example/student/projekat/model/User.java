@@ -2,18 +2,33 @@ package com.example.student.projekat.model;
 
 import android.graphics.Bitmap;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.List;
 
 public class User implements Serializable {
 
+    @SerializedName("id")
+    @Expose
     private int id;
+    @SerializedName("name")
+    @Expose
     private String name;
-    private transient Bitmap photo;
+    @SerializedName("photo")
+    @Expose
+    private Bitmap photo;
+    @SerializedName("username")
+    @Expose
     private String username;
+    @SerializedName("password")
+    @Expose
     private String password;
     private List<Post> posts;
     private List<Comment> comments;
+    @SerializedName("role")
+    @Expose
     private String role;
 
     public User(){}
