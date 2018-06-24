@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/userCommentTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="nesto"
+        android:textSize="16dp"
+        android:layout_centerHorizontal="true"/>
+    <TextView
+        android:id="@+id/userCommentDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="desc"
+        android:textSize="16dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/userCommentTitle"
+        android:layout_centerHorizontal="true"/>
+    <RelativeLayout
+        android:id="@+id/relativeLikesDislikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/userCommentDesc"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:id="@+id/userCommentLikes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="16"
+            android:textSize="16dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"/>
+        <ImageButton
+            android:id="@+id/userCommentLikesImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/userCommentLikes"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/white"
+            android:src="@drawable/ic_thumb_up_dark_green_24dp" />
+
+        <ImageButton
+            android:id="@+id/userCommentDislikesImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/userCommentLikesImage"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/white"
+            android:src="@drawable/ic_thumb_down_dark_red_24dp" />
+        <TextView
+            android:id="@+id/userCommentDislikes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="16"
+            android:textSize="16dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@id/userCommentDislikesImage"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

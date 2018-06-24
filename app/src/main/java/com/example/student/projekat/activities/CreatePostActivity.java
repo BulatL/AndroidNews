@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -48,11 +49,14 @@ import com.example.student.projekat.service.PostService;
 import com.example.student.projekat.service.ServiceUtils;
 import com.example.student.projekat.service.TagService;
 import com.example.student.projekat.service.UserService;
+import com.example.student.projekat.util.SearchDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -63,28 +67,38 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CreatePostActivity extends AppCompatActivity implements LocationListener{
+public class CreatePostActivity extends AppCompatActivity implements LocationListener, SearchDialog.SearchDialogListener{
     private DrawerLayout mDrawerLayout ;
     private EditText titleEdit;
     private EditText descriptionEdit;
     private EditText tagsEdit;
+    private TextView location_text;
+    private Button location_btn;
+
     private Post postResponse;
     private Bitmap bitmap;
     private byte[] byteArray;
-    public static final int PICK_IMAGE = 1;
     private SharedPreferences sharedPreferences;
     private User author = new User();
     private Post post = new Post();
+    private User loggedInUser;
 
-    private Button location_btn;
-    private TextView location_text;
+
     private double longitude;
     private double latitude;
+    private String userName = "";
+    private String provider;
+    private String addOrEdit = "add";
+    private String searchBy;
+    private boolean searchUser;
+    private boolean searchTag;
+
     private LocationManager locationManager;
     private AlertDialog dialog;
-    private String provider;
     private Location location;
+    private PostService postService;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    public static final int PICK_IMAGE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +116,26 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = findViewById(R.id.navigationView);
+        Bundle extras2 = getIntent().getExtras();
+        if(extras2 != null){
+            if(extras2.getSerializable("loggedInUser") != null){
+                loggedInUser = (User)extras2.getSerializable("loggedInUser");
+                navigationView.getMenu().findItem(R.id.accountNV).setVisible(true);
+            }else{
+                navigationView.getMenu().findItem(R.id.accountNV).setVisible(false);
+            }
+        }
+        if(loggedInUser!= null){
+            View headerLayout = navigationView.getHeaderView(0);
+            TextView userNameHeader = headerLayout.findViewById(R.id.username_header);
+            TextView nameHeader = headerLayout.findViewById(R.id.name_header);
+
+            nameHeader.setTextColor(Color.parseColor("#00ff19"));
+            nameHeader.setText(loggedInUser.getName());
+            userNameHeader.setText(loggedInUser.getUsername());
+            userNameHeader.setTextColor(Color.parseColor("#00ff19"));
+
+        }
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -111,13 +145,24 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
                         // close drawer when item is tapped
                         mDrawerLayout.closeDrawers();
 
-                        if(menuItem.getItemId() == R.id.home){
+                        if(menuItem.getItemId() == R.id.homeNV){
                             Toast.makeText(CreatePostActivity.this, "U click on home button",
                                     Toast.LENGTH_SHORT).show();
                             Intent i = new Intent(CreatePostActivity.this, PostActivity.class);
+                            i.putExtra("loggedInUser", loggedInUser);
                             startActivity(i);
                         }
-                        if(menuItem.getItemId() == R.id.settings){
+
+                        if (menuItem.getItemId() == R.id.accountNV) {
+                            Toast.makeText(CreatePostActivity.this, "U click on account button",
+                                    Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(CreatePostActivity.this, UserInfoActivity.class);
+                            i.putExtra("loggedInUser", loggedInUser);
+                            i.putExtra("userInfo", loggedInUser);
+                            startActivity(i);
+                        }
+
+                        if(menuItem.getItemId() == R.id.settingsNV){
                             Toast.makeText(CreatePostActivity.this, "u click on settings button",
                                     Toast.LENGTH_SHORT).show();
                             Intent i = new Intent(CreatePostActivity.this, SettingsActivity.class);
@@ -134,6 +179,17 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
         EditText tags = findViewById(R.id.tagsCreate);
         tags.setFilters(new InputFilter[] {new InputFilter.LengthFilter(250)});
 
+        Bundle extras = getIntent().getExtras();
+        if(extras.getSerializable("post") != null){
+            post = (Post) extras.getSerializable("post");
+            title.setText(post.getTitle());
+            description.setText(post.getDescription());
+            for (Tag t:post.getTags()) {
+                tags.append("#"+t.getName() + " ");
+            }
+            addOrEdit = "edit";
+        }
+
         location_text = findViewById(R.id.textViewLocation);
         location_btn = findViewById(R.id.getLocation);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -146,26 +202,45 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
-            case R.id.add:
+            case R.id.loginMenu:
+                Toast.makeText(CreatePostActivity.this, "U click on login button",
+                        Toast.LENGTH_SHORT).show();
+                Intent iLogin = new Intent(CreatePostActivity.this, LoginActivity.class);
+                startActivity(iLogin);
+                return true;
+            case R.id.searchMenu:
+                Toast.makeText(CreatePostActivity.this, "U click on search button",
+                        Toast.LENGTH_SHORT).show();
+                openSearchDialog();
+                return true;
+            case R.id.addPostMenu:
                 Toast.makeText(CreatePostActivity.this, "U click on add button",
                         Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(CreatePostActivity.this, CreatePostActivity.class);
                 startActivity(i);
                 return true;
-            case R.id.settings:
+            case R.id.settingsMenu:
                 Toast.makeText(CreatePostActivity.this, "U click on settings button",
                         Toast.LENGTH_SHORT).show();
                 Intent i2 = new Intent(CreatePostActivity.this, SettingsActivity.class);
                 startActivity(i2);
                 return true;
-            case R.id.logout:
+            case R.id.logoutMenu:
                 SharedPreferences sharedPreferences = getSharedPreferences(LoginActivity.MyPreferences, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 editor.clear();
                 editor.commit();
-                Intent logoutIntent = new Intent(this, LoginActivity.class);
+                Intent logoutIntent = new Intent(this, PostActivity.class);
+                logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(logoutIntent);
+                return  true;
+            case R.id.registerMenu:
+                Toast.makeText(CreatePostActivity.this, "U click on register button",
+                        Toast.LENGTH_SHORT).show();
+                Intent iRegister = new Intent(CreatePostActivity.this, RegisterActivity.class);
+                startActivity(iRegister);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -174,7 +249,92 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main_menu, menu);
+        menu.findItem(R.id.registerMenu).setVisible(false);
+        Bundle extras = getIntent().getExtras();
+        if(extras.getSerializable("loggedInUser") != null){
+            loggedInUser = (User) extras.getSerializable("loggedInUser");
+        }
+        if(loggedInUser!= null) {
+            menu.findItem(R.id.registerMenu).setVisible(false);
+            menu.findItem(R.id.loginMenu).setVisible(false);
+            if(loggedInUser.getRole().equals("ADMIN") || loggedInUser.getRole().equals("PUBLISHER")){
+                menu.findItem(R.id.addPostMenu).setVisible(true);
+            }
+        }else{
+            menu.findItem(R.id.logoutMenu).setVisible(false);
+            menu.findItem(R.id.addPostMenu).setVisible(false);
+        }
         return true;
+    }
+
+    private boolean validate(String title, String desc, String tag){
+        if(title == null || title.trim().length() == 0){
+            Toast.makeText(this,"Title is required",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(desc == null || desc.trim().length() == 0){
+            Toast.makeText(this,"Description is required",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(tag == null || tag.trim().length() == 0){
+            Toast.makeText(this,"Tag is required",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+
+    public void openSearchDialog(){
+        SearchDialog searchDialog = new SearchDialog();
+        searchDialog.show(getSupportFragmentManager(), "search dialog");
+    }
+
+    @Override
+    public void applayTextS(String searchBy, boolean searchUser, boolean searchTag) {
+        this.searchBy=searchBy;
+        this.searchUser=searchUser;
+        this.searchTag=searchTag;
+        System.out.println(searchBy + "  " + searchUser + "  " +searchTag);
+        if(searchUser==true){
+            postService = ServiceUtils.postService;
+            Call<List<Post>> call =postService.getPostsByAuthor(searchBy);
+            call.enqueue(new Callback<List<Post>>() {
+                @Override
+                public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                    Toast.makeText(getApplicationContext(), "search result", Toast.LENGTH_SHORT).show();
+                    List<Post> searchPosts =response.body();
+                    Intent intent = new Intent(CreatePostActivity.this, PostActivity.class);
+                    intent.putExtra("loggedInUser", loggedInUser);
+                    intent.putExtra("posts", (Serializable) searchPosts);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onFailure(Call<List<Post>> call, Throwable t) {
+
+                }
+            });
+        }
+        if(searchTag==true){
+            postService = ServiceUtils.postService;
+            Call<List<Post>> call =postService.getPostsByTagName(searchBy);
+            call.enqueue(new Callback<List<Post>>() {
+                @Override
+                public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                    Toast.makeText(getApplicationContext(), "search result", Toast.LENGTH_SHORT).show();
+                    List<Post> searchPosts =response.body();
+                    Intent intent = new Intent(CreatePostActivity.this, PostActivity.class);
+                    intent.putExtra("loggedInUser", loggedInUser);
+                    intent.putExtra("posts", (Serializable) searchPosts);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onFailure(Call<List<Post>> call, Throwable t) {
+
+                }
+            });
+        }
     }
 
     public void btnUploadImage(View view){
@@ -201,10 +361,6 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
                 ImageView previewImage = findViewById(R.id.previewImage);
                 previewImage.setImageBitmap(bitmap);
 
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
-                byteArray = stream.toByteArray();
-
             }catch (FileNotFoundException e){
                 e.printStackTrace();
             }catch (IOException e){
@@ -214,110 +370,135 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
     }
 
     public void btnCreatePost(View view) {
-
         titleEdit = findViewById(R.id.titleCreate);
         descriptionEdit = findViewById(R.id.textCreate);
+        tagsEdit = findViewById(R.id.tagsCreate);
 
+        String tagsString = tagsEdit.getText().toString().trim();
         String title = titleEdit.getText().toString();
         String description = descriptionEdit.getText().toString();
 
-        Date date = Calendar.getInstance().getTime();
+        if(validate(title,description,tagsString)) {
+            if (addOrEdit.equals("add")) {
+                System.out.println("Add je");
 
-        sharedPreferences = getSharedPreferences(LoginActivity.MyPreferences, Context.MODE_PRIVATE);
-        if(sharedPreferences.contains(LoginActivity.Username)) {
-            String userName = sharedPreferences.getString(LoginActivity.Username, "");
+                Date date = Calendar.getInstance().getTime();
 
-            UserService userService = ServiceUtils.userService;
 
-            Call<User> call = userService.getUserByUsername(userName);
-            call.enqueue(new Callback<User>() {
+                if (latitude == 0 && longitude == 0) {
+                    latitude = 45.2613;
+                    longitude = 19.8336;
+                }
+                ;
+                post.setTitle(title);
+                post.setDescription(description);
+                post.setDate(date);
+                post.setAuthor(loggedInUser);
+                post.setPhoto(bitmap);
+                post.setLatitude(latitude);
+                post.setLongitude(longitude);
+
+
+                PostService postService = ServiceUtils.postService;
+                Call<Post> call = postService.createPost(post);
+                call.enqueue(new Callback<Post>() {
+                    @Override
+                    public void onResponse(Call<Post> call, Response<Post> response) {
+                        postResponse = response.body();
+                        Toast.makeText(CreatePostActivity.this, "u create post successfully",
+                                Toast.LENGTH_SHORT).show();
+                        addTag();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Post> call, Throwable t) {
+
+                    }
+                });
+
+            } else if (addOrEdit.equals("edit")) {
+
+                post.setTitle(title);
+                post.setDescription(description);
+                PostService postService = ServiceUtils.postService;
+                Call<Post> call = postService.updatePost(post, post.getId());
+                call.enqueue(new Callback<Post>() {
+                    @Override
+                    public void onResponse(Call<Post> call, Response<Post> response) {
+                        Toast.makeText(CreatePostActivity.this, "u updated post successfully",
+                                Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), ReadPostActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("loggedInUser", loggedInUser);
+                        intent.putExtra("post", post);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Post> call, Throwable t) {
+
+                    }
+                });
+            }
+        }
+    }
+
+    public void addTag(){
+        System.out.println("add tag");
+        tagsEdit = findViewById(R.id.tagsCreate);
+        String tagsString = tagsEdit.getText().toString().trim();
+        System.out.println(tagsString);
+        String[] separated = tagsString.split("#");
+
+        List<String> tagFilter =Arrays.asList(separated);
+        Tag tagg = new Tag();
+        for(String ts: tagFilter.subList(1,tagFilter.size())){
+            System.out.println(ts);
+            tagg.setName(ts);
+
+            TagService tagService = ServiceUtils.tagService;
+            Call<Tag> callTags = tagService.addTag(tagg);
+            callTags.enqueue(new Callback<Tag>() {
                 @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    author= response.body();
-                    author.setPhoto(bitmap);
+                public void onResponse(Call<Tag> call, Response<Tag> response) {
+                    Tag tagResponse = response.body();
+
+                    System.out.println("zavrsio tag add");
+                    setTagsInPost(postResponse.getId(), tagResponse.getId());
                 }
 
                 @Override
-                public void onFailure(Call<User> call, Throwable t) {
+                public void onFailure(Call<Tag> call, Throwable t) {
 
                 }
             });
         }
-        author.setUsername(sharedPreferences.getString(LoginActivity.Username, ""));
-        post.setTitle(title);
-        post.setDescription(description);
-        post.setDate(date);
-        post.setAuthor(author);
-        post.setPhoto(null);
-        post.setLatitude(latitude);
-        post.setLongitude(longitude);
-
-
-        PostService postService = ServiceUtils.postService;
-        Call<Post> call = postService.createPost(post);
-        call.enqueue(new Callback<Post>() {
-            @Override
-            public void onResponse(Call<Post> call, Response<Post> response) {
-                postResponse = response.body();
-                System.out.println("post id " + postResponse);
-                Toast.makeText(CreatePostActivity.this, "u create post successfully",
-                        Toast.LENGTH_SHORT).show();
-                addTag();
-            }
-
-            @Override
-            public void onFailure(Call<Post> call, Throwable t) {
-
-            }
-        });
-
-
-    }
-
-    public void addTag(){
-        tagsEdit = findViewById(R.id.tagsCreate);
-        TagService tagService = ServiceUtils.tagService;
-        String tags = tagsEdit.getText().toString();
-        Tag tag = new Tag();
-        tag.setName(tags);
-        Call<Tag> callTags = tagService.addTag(tag);
-        callTags.enqueue(new Callback<Tag>() {
-            @Override
-            public void onResponse(Call<Tag> call, Response<Tag> response) {
-                Tag tagResponse = response.body();
-                System.out.println("tag name " + tagResponse.getName());
-                setTagsInPost(postResponse.getId(), tagResponse.getId());
-            }
-
-            @Override
-            public void onFailure(Call<Tag> call, Throwable t) {
-
-            }
-        });
     }
 
     public void setTagsInPost(int postId, int tagId){
+        System.out.println("set tags in post");
         PostService postService = ServiceUtils.postService;
-        System.out.println("-*-*-*-*-*-*//////////////////////----------------------------------------------------");
-        System.out.println("post id "+postId);
-        System.out.println("tag id "+tagId);
         Call<Post> call = postService.setTagsInPost(postId,tagId);
-        System.out.println(call);
         call.enqueue(new Callback<Post>() {
             @Override
             public void onResponse(Call<Post> call, Response<Post> response) {
-                System.out.println(response.errorBody());
-                Intent intent = new Intent(getApplicationContext(), PostActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("post", post);
-                startActivity(intent);
+                System.out.println("zavrsio i ovo");
+                openReadPostActivity();
             }
 
             @Override
             public void onFailure(Call<Post> call, Throwable t) {
-                System.out.println(t.getMessage());
             }
         });
+    }
+
+    public void openReadPostActivity(){
+        post.setPhoto(null);
+        System.out.println("usao u openreadpostactivity");
+        Intent intent = new Intent(getApplicationContext(), ReadPostActivity.class);
+        intent.putExtra("loggedInUser", loggedInUser);
+        intent.putExtra("post", post);
+        startActivity(intent);
     }
 
     @Override
@@ -352,8 +533,7 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
                 if (location == null) {
                     Toast.makeText(getApplicationContext(), "Location not found", Toast.LENGTH_SHORT).show();
                 }
-                if (location != null) {
-                    System.out.println("LONGITUDEEE: "+location.getLongitude() + "LATITUDEEEE:" + location.getLatitude());
+                else{
                     getAddress(location.getLatitude(),location.getLongitude());
                     onLocationChanged(location);
                 }
@@ -370,7 +550,6 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
     public void onLocationChanged(Location location) {
         longitude = location.getLongitude();
         latitude = location.getLatitude();
-        System.out.println("******************");
     }
 
     @Override
@@ -416,13 +595,11 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
                         android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
 
                     locationManager.requestLocationUpdates(provider,0,0,this);
-                    System.out.println("FINE LOC");
 
                 }else if(ContextCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
 
                     locationManager.requestLocationUpdates(provider,0,0,this);
-                    System.out.println("COARSE LOC");
                 }
             }
         }
@@ -476,9 +653,6 @@ public class CreatePostActivity extends AppCompatActivity implements LocationLis
             String country = addresses.get(0).getCountryName();
             location_text.setText(city + "," + country);
 
-
-            System.out.println(city);
-            System.out.println(country);
         } catch (IOException e) {
             e.printStackTrace();
         }

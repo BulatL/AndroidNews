@@ -26,14 +26,20 @@ public interface PostService {
     @GET("posts/{id}")
     Call<Post> getPost(@Path("id") int id);
 
-    @GET("posts/tag/{id}")
+    @GET("posts/author/{authorName}")
+    Call<List<Post>> getPostsByAuthor(@Path("authorName") String authorName);
+
+    @GET("posts/tagName/{tagName}")
+    Call<List<Post>> getPostsByTagName(@Path("tagName") String tagName);
+
+    @GET("posts/tagId/{id}")
     Call<List<Post>> getPostsByTag(@Path("id") int id);
 
     @POST("posts")
     Call<Post> createPost(@Body Post post);
 
     @PUT("posts/{id}")
-    Call<Post> addLikeDislike(@Body Post post,@Path("id") int id);
+    Call<Post> updatePost(@Body Post post,@Path("id") int id);
 
     @POST("posts/setTags/{postId}/{tagId}")
     Call<Post> setTagsInPost(@Path("postId") int postId,@Path("tagId") int tagId);

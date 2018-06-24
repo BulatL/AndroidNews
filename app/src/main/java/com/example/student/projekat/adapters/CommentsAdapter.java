@@ -1,18 +1,29 @@
 package com.example.student.projekat.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.student.projekat.R;
 import com.example.student.projekat.activities.ReadPostActivity;
+import com.example.student.projekat.activities.UserInfoActivity;
 import com.example.student.projekat.model.Comment;
+import com.example.student.projekat.model.User;
 import com.example.student.projekat.service.CommentService;
 import com.example.student.projekat.service.ServiceUtils;
 
@@ -28,15 +39,16 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
     private Context context;
     private CommentService commentService;
     private Comment comment;
+    private User loggedInUser;
     private TextView dislikes;
     private TextView likes;
-    private ImageButton btnLike;
-    private ImageButton btnDislike;
 
-    public CommentsAdapter(Context context, List<Comment> comments) {
+
+    public CommentsAdapter(Context context, List<Comment> comments, User loggedInUser) {
         super(context, 0, comments);
         this.comments = comments;
         this.context = context;
+        this.loggedInUser = loggedInUser;
     }
 
 
@@ -44,38 +56,47 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.comment_item, parent, false);
         }
-        Context context = parent.getContext();
+        final Context context = parent.getContext();
 
-        comment = getItem(position);
+        final Comment comment = getItem(position);
+
 
         ImageView image = convertView.findViewById(R.id.comment_image);
-        TextView title = convertView.findViewById(R.id.comment_title);
-        TextView desc = convertView.findViewById(R.id.comment_description);
+        final TextView title = convertView.findViewById(R.id.comment_title);
+        final TextView desc = convertView.findViewById(R.id.comment_description);
         TextView author = convertView.findViewById(R.id.comment_author);
         likes = convertView.findViewById(R.id.likes_comment);
         dislikes = convertView.findViewById(R.id.disLikes_comment);
         ImageButton btnDelete = convertView.findViewById(R.id.btnDeleteComment);
-        btnLike = convertView.findViewById(R.id.image_likes_comment);
-        btnDislike = convertView.findViewById(R.id.image_dislikes_comment);
+        final ImageButton btnLike = convertView.findViewById(R.id.image_likes_comment);
+        final ImageButton btnDislike = convertView.findViewById(R.id.image_dislikes_comment);
+        final ImageButton btnEdit = convertView.findViewById(R.id.btnEditComment);
 
-        Boolean provera = ReadPostActivity.checkUserAndAuthro(comment.getAuthor().getUsername());
-        if(provera== true){
+        if(loggedInUser==null){
+            btnLike.setEnabled(false);
+            btnDislike.setEnabled(false);
+        }
+
+        String provera = ReadPostActivity.checkUserAndAuthro(comment.getAuthor().getUsername());
+        if(provera.equals("same")){
+            btnEdit.setVisibility(View.VISIBLE);
             btnDelete.setVisibility(View.VISIBLE);
         }else{
+            btnEdit.setVisibility(View.GONE);
             btnDelete.setVisibility(View.GONE);
         }
 
         btnLike.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                btnLikeComment(view, comment);
+                btnLikeComment(view, comment,btnLike, btnDislike);
             }
         });
 
         btnDislike.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                btnDislikeComment(view, comment);
+                btnDislikeComment(view, comment,btnLike, btnDislike);
             }
         });
 
@@ -85,11 +106,33 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
 
                 btnDeleteComment(comment.getId());
             }
+
         });
 
-        /*Bitmap myBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.android_robot);
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ReadPostActivity.editComment(comment);
+            }
+        });
+
+        author.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    Intent i = new Intent(context, UserInfoActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.putExtra("loggedInUser", loggedInUser);
+                    i.putExtra("userInfo", comment.getAuthor());
+                    context.startActivity(i);
+            }
+        });
+
+        Bitmap myBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.android_robot);
+        /*String uri = Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +R.drawable.android_robot).toString();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 8;
+        Bitmap myBitmap = BitmapFactory.decodeFile(uri ,options);*/
         ImageView imageView = (ImageView) convertView.findViewById(R.id.comment_image);
-        imageView.setImageBitmap(myBitmap);*/
+        imageView.setImageBitmap(myBitmap);
 
         title.setText(comment.getTitle());
         desc.setText(comment.getDescription());
@@ -103,8 +146,6 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
     public void btnDeleteComment(int commentId){
         commentService = ServiceUtils.commentService;
         Call<Void> call = commentService.deleteComment(commentId);
-        System.out.println("prosledjeni id " + commentId);
-        System.out.println("print pre call poziva ");
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -120,15 +161,15 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
         this.notifyDataSetChanged();
     }
 
-    public void btnLikeComment(View view, final Comment commentt) {
+    public void btnLikeComment(View view, final Comment commentt, final ImageButton btnLike, final ImageButton btnDislike) {
 
-        boolean provera = ReadPostActivity.checkUserAndAuthro(commentt.getAuthor().getUsername());
-        if(provera != true){
+        String provera = ReadPostActivity.checkUserAndAuthro(commentt.getAuthor().getUsername());
+        if(provera.equals("")){
             if (btnLike.isEnabled()) {
                 commentt.setLikes(commentt.getLikes() + 1);
                 likes.setText(String.valueOf(commentt.getLikes()));
                 commentService = ServiceUtils.commentService;
-                Call<Comment> call = commentService.addLikeDislike(commentt, commentt.getId());
+                Call<Comment> call = commentService.updateComment(commentt, commentt.getId());
                 call.enqueue(new Callback<Comment>() {
                     @Override
                     public void onResponse(Call<Comment> call, Response<Comment> response) {
@@ -141,7 +182,6 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
                     }
                 });
                 Toast.makeText(context, "Liked comment", Toast.LENGTH_SHORT).show();
-                System.out.println("da li postoji btnDislike? " + btnDislike);
                 if (!btnDislike.isEnabled()) {
                     btnDislike.setImageResource(R.drawable.ic_thumb_down_dark_red_24dp);
                 }
@@ -158,16 +198,16 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
         this.notifyDataSetChanged();
     }
 
-    public void btnDislikeComment(View view, final Comment comment1){
+    public void btnDislikeComment(View view, final Comment comment1, final ImageButton btnLike, final ImageButton btnDislike){
 
-        boolean provera = ReadPostActivity.checkUserAndAuthro(comment1.getAuthor().getUsername());
-        if(provera != true){
+        String provera = ReadPostActivity.checkUserAndAuthro(comment1.getAuthor().getUsername());
+        if(provera.equals("")){
             if(btnDislike.isEnabled()) {
                 comment1.setDislikes(comment1.getDislikes() + 1);
                 dislikes.setText(String.valueOf(comment1.getDislikes()));
                 Toast.makeText(context, "Disliked comment", Toast.LENGTH_SHORT).show();
                 commentService = ServiceUtils.commentService;
-                Call<Comment> call = commentService.addLikeDislike(comment1, comment1.getId());
+                Call<Comment> call = commentService.updateComment(comment1, comment1.getId());
                 call.enqueue(new Callback<Comment>() {
                     @Override
                     public void onResponse(Call<Comment> call, Response<Comment> response) {
@@ -195,5 +235,29 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
         }
 
         this.notifyDataSetChanged();
+    }
+
+    public void btnEditComment(final Comment comment, final TextView titleTV, final TextView descTV){
+        String title = titleTV.getText().toString();
+        String desc = descTV.getText().toString();
+
+        final EditText newTitleTV = new EditText(context);
+        final EditText newDescTV = new EditText(context);
+        newTitleTV.setText(title);
+        newDescTV.setText(desc);
+        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        alert.setMessage("Edit comment");
+        alert.setTitle("Edit comment");
+        alert.setView(newTitleTV);
+        alert.setView(newDescTV);
+        alert.setPositiveButton("Yes Option", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String newTitle = newTitleTV.getText().toString();
+                String newDesc = newDescTV.getText().toString();
+                System.out.println(newTitle+ "    " + newDesc);
+            }
+        });
+        alert.show();
     }
 }

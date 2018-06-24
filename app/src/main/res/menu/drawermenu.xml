@@ -4,14 +4,20 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/home"
+            android:id="@+id/homeNV"
             android:icon="@drawable/ic_home_black_24dp"
             android:title="home"
             app:showAsAction="never">
 
         </item>
         <item
-            android:id="@+id/settings"
+            android:id="@+id/accountNV"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="account"
+            app:showAsAction="never">
+        </item>
+        <item
+            android:id="@+id/settingsNV"
             android:title="settings"
             android:icon="@drawable/ic_settings_black_24dp"
             app:showAsAction="never">

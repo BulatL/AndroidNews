@@ -25,11 +25,14 @@ public interface CommentService {
     @GET("comments/post/{id}")
     Call<List<Comment>> getCommentsByPost(@Path("id") int id);
 
+    @GET("comments/author/{userName}")
+    Call<List<Comment>> getCommentsByAuthor(@Path("userName") String username);
+
     @POST("comments")
     Call<Comment> addComment(@Body Comment comment);
 
     @PUT("comments/{id}")
-    Call<Comment> addLikeDislike(@Body Comment comment, @Path("id") int id);
+    Call<Comment> updateComment(@Body Comment comment, @Path("id") int id);
 
     @DELETE("comments/{id}")
     Call<Void> deleteComment(@Path("id") int id);

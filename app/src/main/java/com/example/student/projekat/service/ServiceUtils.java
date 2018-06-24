@@ -1,5 +1,8 @@
 package com.example.student.projekat.service;
 
+import android.graphics.Bitmap;
+
+import com.example.student.projekat.util.ImageSerialization;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -13,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceUtils {
 
-    static final String BASE_URL="http://2fc70961.ngrok.io/api/";
+    static final String BASE_URL="http://0cb16064.ngrok.io/api/";
 
 
     public static OkHttpClient test(){
@@ -29,6 +32,7 @@ public class ServiceUtils {
         return client;
     }
     static Gson gson = new GsonBuilder()
+            .registerTypeAdapter(Bitmap.class, ImageSerialization.getBitmapTypeAdapter())
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
             .create();
 

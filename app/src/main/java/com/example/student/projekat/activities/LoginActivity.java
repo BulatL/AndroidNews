@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,30 +41,8 @@ public class LoginActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.password);
         btnLogin = findViewById(R.id.loginBtn);
 
-
-
-
-        /*if (userNamePref.equals("")) {
-            btnLogin.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String username = editUsername.getText().toString();
-                    String password = editPassword.getText().toString();
-
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                    if (validateLogin(username, password)) {
-                        editor.putString(Username, username);
-                        editor.commit();
-                        doLogin(username, password);
-                    }
-                }
-            });
-        } else {
-            Intent intent = new Intent(this, PostActivity.class);
-            startActivity(intent);
-        }*/
-
+        editTextUsername.setFilters(new InputFilter[] {new InputFilter.LengthFilter(250)});
+        editTextUsername.setFilters(new InputFilter[] {new InputFilter.LengthFilter(250)});
     }
     public void btnLogin (View view){
         editTextUsername = findViewById(R.id.username);
@@ -95,8 +74,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
                 User user = response.body();
 
-
-
                 if(response.code()!= 200){
                     Toast.makeText(LoginActivity.this,"Username or password is incorrect",Toast.LENGTH_SHORT).show();
                 }
@@ -106,19 +83,16 @@ public class LoginActivity extends AppCompatActivity {
 
                         sharedPreferences = getSharedPreferences(MyPreferences, Context.MODE_PRIVATE);
                         String userNamePref = sharedPreferences.getString(Username, "");
-                        System.out.println(userNamePref);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString(Name,user.getName());
                         editor.putString(Username, username);
                         editor.commit();
                         String nesto = sharedPreferences.getString(Username, "");
-                        System.out.println("jel upisao dobro? " + nesto);
-                        System.out.println(username);
-                        System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
-                        System.out.println(response.code());
 
                         Intent intent = new Intent(LoginActivity.this, PostActivity.class);
+                        intent.putExtra("loggedInUser", user);
                         startActivity(intent);
+
 
                     } else {
                         Toast.makeText(LoginActivity.this, "Username or password is incorrect", Toast.LENGTH_SHORT).show();

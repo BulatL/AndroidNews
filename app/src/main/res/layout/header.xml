@@ -15,16 +15,12 @@
         android:id="@+id/username_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:textColor="#000"
         android:textStyle="bold"
         android:layout_marginTop="8dp"/>
     <TextView
         android:id="@+id/name_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:textColor="#000"
         android:textStyle="bold"
         android:layout_marginTop="2dp"/>
 </LinearLayout>

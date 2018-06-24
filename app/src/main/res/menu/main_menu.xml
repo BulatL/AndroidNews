@@ -2,20 +2,38 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/add"
+        android:id="@+id/searchMenu"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="searchh"
+        app:showAsAction="always">
+
+    </item>
+    <item
+        android:id="@+id/addPostMenu"
         android:icon="@drawable/ic_add_green_24dp"
         android:title="add"
         app:showAsAction="always">
 
     </item>
     <item
-        android:id="@+id/settings"
+        android:id="@+id/settingsMenu"
         android:title="settings"
         android:icon="@drawable/ic_settings_black_24dp"
         app:showAsAction="never">
     </item>
     <item
-        android:id="@+id/logout"
+        android:id="@+id/registerMenu"
+        android:title="register"
+        app:showAsAction="never">
+
+    </item>
+    <item
+        android:id="@+id/loginMenu"
+        android:title="login"
+        app:showAsAction="never">
+    </item>
+    <item
+        android:id="@+id/logoutMenu"
         android:title="logout"
         app:showAsAction="never">
     </item>

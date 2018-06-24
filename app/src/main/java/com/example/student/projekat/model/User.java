@@ -9,15 +9,16 @@ public class User implements Serializable {
 
     private int id;
     private String name;
-    private Bitmap photo;
+    private transient Bitmap photo;
     private String username;
     private String password;
     private List<Post> posts;
     private List<Comment> comments;
+    private String role;
 
     public User(){}
 
-    public User(int id, String name, Bitmap photo, String username, String password, List<Post> posts, List<Comment> comments) {
+    public User(int id, String name, Bitmap photo, String username, String password, List<Post> posts, List<Comment> comments,String role) {
         this.id = id;
         this.name = name;
         this.photo = photo;
@@ -25,6 +26,15 @@ public class User implements Serializable {
         this.password = password;
         this.posts = posts;
         this.comments = comments;
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public int getId() {

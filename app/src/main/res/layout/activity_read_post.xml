@@ -70,13 +70,22 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textSize="32dp"
-                                    android:layout_toLeftOf="@id/btnDeletePost"
+                                    android:layout_toLeftOf="@id/btnEditPost"
                                     />
                                 <ImageButton
-                                    android:id="@+id/btnDeletePost"
-                                    android:layout_width="50dp"
+                                    android:id="@+id/btnEditPost"
+                                    android:layout_width="40dp"
                                     android:layout_height="50dp"
-                                    android:src="@drawable/ic_clear_red_24dp"
+                                    android:src="@drawable/ic_edit_green_24dp"
+                                    android:background="@color/white"
+                                    android:onClick="btnEditPost"
+                                    android:layout_toLeftOf="@id/btnDeletePost"/>
+
+                                <ImageButton
+                                    android:id="@+id/btnDeletePost"
+                                    android:layout_width="40dp"
+                                    android:layout_height="50dp"
+                                    android:src="@drawable/ic_delete_red_24dp"
                                     android:background="@color/white"
                                     android:onClick="btnDeletePost"
                                     android:gravity="end"
@@ -89,27 +98,28 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
 
-                                <TextView
+                                <Button
                                     android:id="@+id/AuthorRead"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textSize="20dp"
                                     android:textStyle="bold"
-                                    />
-
+                                    android:onClick="btnAuthorInfo"
+                                    android:background="@color/white"
+                                    android:textAllCaps="false"/>
                                 <TextView
                                     android:id="@+id/dateTime"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="15dp"
-                                    android:layout_marginTop="5dp"
+                                    android:layout_marginTop="15dp"
                                     android:layout_toRightOf="@id/AuthorRead" />
                                 <TextView
                                     android:id="@+id/locationReadPost"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="15dp"
-                                    android:layout_marginTop="5dp"
+                                    android:layout_marginTop="15dp"
                                     android:layout_alignParentRight="true"
                                     android:layout_toRightOf="@id/dateTime" />
                             </RelativeLayout>
@@ -215,7 +225,17 @@
                                 android:background="@color/white"
                                 android:src="@drawable/ic_add_green_24dp"
                                 android:gravity="end"
+                                android:layout_marginTop="5dp"
                                 android:onClick="btnAddComment"
+                                android:layout_alignParentRight="true"/>
+                            <ImageButton
+                                android:id="@+id/cancelComment"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:background="@color/white"
+                                android:src="@drawable/ic_clear_red_24dp"
+                                android:layout_below="@id/addComment"
+                                android:onClick="btnCancelComment"
                                 android:layout_alignParentRight="true"/>
                         </RelativeLayout>
 

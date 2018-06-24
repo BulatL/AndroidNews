@@ -95,7 +95,7 @@ public class PostsAdapter extends ArrayAdapter<Post> {
         /*convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("title posta " +post.getTitle());
+                ("title posta " +post.getTitle());
                 openReadPostActivity(post);
             }
         });*/
